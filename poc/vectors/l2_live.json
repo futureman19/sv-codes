@@ -1,0 +1,7 @@
+{
+  "status": "in_progress",
+  "payer_pubkey": "0381666e30f9989fbbebe810fddc1bf3972e591a8b2c7663b0d3740bd1a2bbec57",
+  "payer_priv_hex": "a4d7130830ba20bf3309a65cff6b47e900a3a37f3195aef20d546365bc9e2eb5",
+  "payer_address": "1FBcZfcqbo8YLyXMTUn5Y9whrSX3nzVT1v",
+  "note": "recovery record written before any funds move"
+}

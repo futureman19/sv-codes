@@ -115,7 +115,9 @@ async def claim(req: Request):
     pub_hex = (body.get("pub") or "").strip()
     sticker = re.sub(r"[^a-zA-Z0-9-]", "", (body.get("s") or "web"))[:32] or "web"
     fp = re.sub(r"[^0-9a-f]", "", (body.get("fp") or ""))[:16]
-    ip = req.client.host if req.client else "?"
+    # behind fly.io's proxy req.client.host is the edge proxy IP (shared by ALL
+    # visitors) — use Fly-Client-IP so rate limits apply per real visitor
+    ip = req.headers.get("fly-client-ip") or (req.client.host if req.client else "?")
 
     if not PUB_RE.match(pub_hex):
         return JSONResponse({"error": "bad_request", "detail": "invalid pubkey"}, 400)
