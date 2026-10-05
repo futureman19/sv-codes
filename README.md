@@ -15,9 +15,13 @@ SV Code is the first transport of the **Bitcoin Machine Protocol (BMP)**, an ope
 ## Repository layout
 
 ```
-spec/     Protocol specifications (Phase 1 — complete, Draft status)
-docs/     Project website — GitHub Pages (Phase 2)
-poc/      Reference implementation: SV Code encoder + scanner (Phase 3)
+spec/     Protocol specifications (BMP-0000 + SV-0001 — Stable)
+docs/     Project website (GitHub Pages): live transmitter + camera scanner;
+          docs/j/ = sticker-campaign landing page with in-browser micro-wallet
+poc/      Reference implementation: encoder, scanner, golden vectors,
+          campaign sticker generator (make_sticker.py + verify_sticker.py)
+faucet/   Sticker-campaign faucet (FastAPI on fly.io): pays sats to landing-page
+          wallets; dependency-free TX builder verified vs ABC consensus vectors
 ```
 
 **Live site:** <https://futureman19.github.io/sv-codes/> (includes a live in-browser SV Code transmitter implementing the SV-0001 draft wire format — verified against the spec's framing, fountain coding, and CRC32 checks).

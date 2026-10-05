@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>You found an SV Code</title>
+<meta name="description" content="This sticker speaks two languages. Your phone read the QR. Machines read the other grid — and it carries real Bitcoin.">
+<style>
+  :root{
+    --bg:#0a0c0e; --surface:#10141a; --surface2:#151b22; --border:#212a34;
+    --text:#d8e0e8; --dim:#8494a3; --cyan:#22d3ee; --green:#34d399; --yellow:#facc15; --red:#ef4444;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:520px;margin:0 auto;padding:0 20px}
+  section{padding:40px 0;border-bottom:1px solid var(--border)}
+  .kick{color:var(--cyan);font-size:11px;letter-spacing:.22em;margin-bottom:14px}
+  h1{font-size:26px;line-height:1.25;margin-bottom:16px;font-weight:600}
+  h2{font-size:19px;margin-bottom:16px;font-weight:600}
+  p{color:var(--dim);margin-bottom:12px}
+  p b{color:var(--text)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;margin:16px 0}
+  .btn{
+    display:block;width:100%;font-family:inherit;font-size:15px;font-weight:600;letter-spacing:.04em;
+    padding:15px 20px;border-radius:8px;border:1px solid var(--cyan);background:var(--cyan);
+    color:#06272c;cursor:pointer;text-align:center;
+  }
+  .btn:disabled{opacity:.5;cursor:default}
+  .btn.ghost{background:transparent;color:var(--cyan)}
+  .btn:hover:not(:disabled){filter:brightness(1.1)}
+  .mono-box{
+    background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;
+    font-size:12px;word-break:break-all;color:var(--text);margin:10px 0;
+  }
+  .label{font-size:10.5px;letter-spacing:.14em;color:var(--dim);margin-bottom:4px}
+  .ok{color:var(--green)} .warn{color:var(--yellow)} .err{color:var(--red)}
+  .hidden{display:none!important}
+  .stat-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #1a222b;font-size:13px}
+  .stat-row span{color:var(--dim)} .stat-row b{color:var(--cyan);font-weight:600}
+  canvas{image-rendering:pixelated;max-width:100%;border-radius:6px;display:block;margin:0 auto}
+  #camVideo{display:none}
+  #camCanvas{background:#000}
+  .story{display:grid;gap:14px}
+  .story .card h3{font-size:14px;margin-bottom:6px;color:var(--cyan);font-weight:600}
+  a{color:var(--cyan)}
+  .tiny{font-size:11px;color:var(--dim);margin-top:8px}
+  .sig{padding:2px 8px;border-radius:3px;font-size:11px;letter-spacing:.08em}
+  .sig.okb{border:1px solid var(--green);color:var(--green)}
+  .footer{padding:30px 0 60px;text-align:center}
+</style>
+</head>
+<body>
+
+<section>
+  <div class="wrap">
+    <div class="kick">SV·CODES — BITCOIN MACHINE PROTOCOL</div>
+    <h1>You just found a sticker that speaks two languages.</h1>
+    <p>Your phone read the QR code. Machines — robots, cameras, devices — read the <b>other grid</b>. Both carry real Bitcoin. No app. No account. No bank.</p>
+
+    <div class="card">
+      <div class="label">YOUR BITCOIN ADDRESS — MADE IN YOUR BROWSER, JUST NOW</div>
+      <div class="mono-box" id="addrBox">generating…</div>
+      <p class="tiny">The key to this wallet was created on your phone and never leaves it. Nobody else has it — not even us.</p>
+    </div>
+
+    <div class="card" id="claimCard">
+      <div class="label">WELCOME GIFT</div>
+      <p style="margin-bottom:14px">This sticker carries a small amount of real Bitcoin. Claim it to the wallet above:</p>
+      <button class="btn" id="claimBtn">Claim my Bitcoin</button>
+      <div id="claimOut" class="hidden" style="margin-top:14px">
+        <div class="stat-row"><span>amount</span><b id="claimSats">—</b></div>
+        <div class="stat-row"><span>status</span><b id="claimStatus">—</b></div>
+        <div class="stat-row"><span>transaction</span><b><a id="claimTx" href="#" target="_blank" rel="noopener">view ↗</a></b></div>
+        <p class="tiny" id="claimNote"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kick">THE OTHER GRID</div>
+    <h2>Watch your phone read it like a machine.</h2>
+    <p>The grid below is broadcasting a signed message right now — the same format as the sticker. Your phone is decoding it live, <b>no internet involved</b>:</p>
+    <div class="card" style="text-align:center">
+      <canvas id="demoCanvas" width="640" height="640" style="width:260px"></canvas>
+      <div id="demoResult" class="mono-box hidden" style="text-align:left;margin-top:14px"></div>
+      <p class="tiny" id="demoStatus">listening…</p>
+    </div>
+    <p>Now the real thing — point your camera at the <b>colored grid on the sticker</b>:</p>
+    <div class="card" style="text-align:center">
+      <video id="camVideo" playsinline muted></video>
+      <canvas id="camCanvas"></canvas>
+      <div style="margin-top:14px"><button class="btn ghost" id="camStart">Start camera</button></div>
+      <span class="tiny" id="scanStatus">camera off — everything runs locally on this page</span>
+      <div id="scanResult" class="mono-box hidden" style="text-align:left;margin-top:12px"></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kick">WHAT JUST HAPPENED</div>
+    <div class="story">
+      <div class="card">
+        <h3>① Money came out of a sticker</h3>
+        <p>A Bitcoin transaction moved from the physical world onto your phone. No signup, no app store, no ID check. That's what Bitcoin was always supposed to feel like.</p>
+      </div>
+      <div class="card">
+        <h3>② The colored grid is for machines</h3>
+        <p>QR codes were built for humans in 1994. SV Codes are built for machines: any camera can read them at any angle, they carry whole Bitcoin transactions, and they work with zero internet — the message travels as light.</p>
+      </div>
+      <div class="card">
+        <h3>③ Anyone can verify it</h3>
+        <p>Every SV Code is cryptographically signed. When your phone decoded the grid above, it checked the signature itself — no server told it what to trust. That's the protocol: <a href="../">sv-codes</a>, open and free for anyone to build on.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="border-bottom:none">
+  <div class="wrap">
+    <div class="kick">KEEP IT</div>
+    <h2>Your Bitcoin, your key.</h2>
+    <p>This is your wallet's secret key. Anyone with it can move the coins — guard it like cash.</p>
+    <button class="btn ghost" id="revealBtn">Reveal my key</button>
+    <div id="wifBox" class="hidden">
+      <div class="mono-box" id="wifText"></div>
+      <button class="btn" id="copyBtn">Copy key</button>
+      <p class="tiny">To move your Bitcoin into a full wallet: install <a href="https://yours.org" target="_blank" rel="noopener">Yours</a> or <a href="https://handcash.io" target="_blank" rel="noopener">HandCash</a>, choose "import key", and paste this in.</p>
+    </div>
+    <p class="tiny" style="margin-top:20px">Tip: add this page to your home screen — it doubles as an SV Code reader for the next sticker you find.</p>
+  </div>
+</section>
+
+<div class="footer">
+  <div class="wrap tiny">
+    <a href="../">SV·CODES</a> — machine-native visual transaction streaming on Bitcoin SV
+  </div>
+</div>
+
+<script src="../js/svc.js"></script>
+<script src="../js/miniwallet.js"></script>
+<script src="../js/encoder.js"></script>
+<script src="../js/decoder.js"></script>
+<script src="../js/scanner.js"></script>
+<script>
+"use strict";
+const FAUCET_URL = new URLSearchParams(location.search).get("faucet") || "https://sv-faucet.fly.dev";
+const params = new URLSearchParams(location.search);
+const STICKER = (params.get("s") || "web").replace(/[^a-z0-9-]/gi, "").slice(0, 32) || "web";
+
+/* ---------- wallet (persisted on this device) ---------- */
+let wallet;
+const stored = localStorage.getItem("svj_priv");
+if (stored && /^[0-9a-f]{64}$/.test(stored)) {
+  wallet = MiniWallet.fromPriv(SVC.hexToBytes(stored));
+} else {
+  const priv = MiniWallet.randomPriv();
+  localStorage.setItem("svj_priv", SVC.bytesToHex(priv));
+  wallet = MiniWallet.fromPriv(priv);
+}
+document.getElementById("addrBox").textContent = wallet.address;
+
+/* ---------- fingerprint (light, honest: a speed bump, not identity) ---------- */
+function fingerprint(){
+  const s = [navigator.userAgent, screen.width + "x" + screen.height, Intl.DateTimeFormat().resolvedOptions().timeZone, navigator.language].join("|");
+  return SVC.bytesToHex(SVC.sha256(new TextEncoder().encode(s))).slice(0, 16);
+}
+
+/* ---------- claim flow ---------- */
+const claimBtn = document.getElementById("claimBtn");
+const claimOut = document.getElementById("claimOut");
+const prior = localStorage.getItem("svj_claim");
+if (prior) showClaim(JSON.parse(prior), true);
+
+function showClaim(r, restored){
+  claimOut.classList.remove("hidden");
+  document.getElementById("claimSats").textContent = "+" + Number(r.sats).toLocaleString() + " sats";
+  const st = document.getElementById("claimStatus");
+  st.textContent = "CONFIRMED ✓ broadcast to the Bitcoin network";
+  st.className = "ok";
+  const tx = document.getElementById("claimTx");
+  tx.href = "https://whatsonchain.com/tx/" + r.txid;
+  tx.textContent = r.txid.slice(0, 16) + "… ↗";
+  document.getElementById("claimNote").textContent =
+    (restored ? "You already claimed this gift. " : "") +
+    "It's yours — secured by the key on this phone.";
+  claimBtn.textContent = "Claimed ✓";
+  claimBtn.disabled = true;
+}
+function claimFail(msg, note){
+  claimOut.classList.remove("hidden");
+  const st = document.getElementById("claimStatus");
+  st.textContent = msg; st.className = "warn";
+  document.getElementById("claimSats").textContent = "—";
+  document.getElementById("claimTx").textContent = "—";
+  document.getElementById("claimNote").textContent = note || "";
+  claimBtn.disabled = false;
+}
+claimBtn.addEventListener("click", async () => {
+  claimBtn.disabled = true;
+  claimBtn.textContent = "Claiming…";
+  try {
+    const res = await fetch(FAUCET_URL + "/claim", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pub: wallet.pubHex, s: STICKER, fp: fingerprint() }),
+    });
+    const data = await res.json();
+    if (res.ok && data.txid) {
+      localStorage.setItem("svj_claim", JSON.stringify(data));
+      showClaim(data, false);
+    } else if (data.error === "already_claimed") {
+      if (data.txid) { localStorage.setItem("svj_claim", JSON.stringify(data)); showClaim(data, true); }
+      else claimFail("Already claimed", "This wallet already received its gift.");
+    } else if (data.error === "rate_limited") {
+      claimFail("Slow down", "This device or network claimed recently. Try again tomorrow.");
+    } else if (data.error === "faucet_empty") {
+      claimFail("Sticker is out of coins", "This one's been drained — but your wallet still works. Tell the sticker's owner to refill it.");
+    } else {
+      claimFail("Couldn't claim right now", data.detail || "Please try again in a moment.");
+    }
+  } catch (e) {
+    claimFail("Claim service unreachable", "Your wallet is still valid — try again later.");
+  }
+  claimBtn.textContent = claimBtn.disabled ? claimBtn.textContent : "Claim my Bitcoin";
+});
+
+/* ---------- key reveal ---------- */
+document.getElementById("revealBtn").addEventListener("click", function(){
+  document.getElementById("wifBox").classList.remove("hidden");
+  document.getElementById("wifText").textContent = wallet.wif;
+  this.classList.add("hidden");
+});
+document.getElementById("copyBtn").addEventListener("click", async function(){
+  try { await navigator.clipboard.writeText(wallet.wif); this.textContent = "Copied ✓"; }
+  catch (e) { this.textContent = "Select and copy manually ↑"; }
+});
+
+/* ---------- live self-decode demo ---------- */
+const demoStatus = document.getElementById("demoStatus");
+const demoResult = document.getElementById("demoResult");
+const tx2 = SVEnc.makeBroadcaster(document.getElementById("demoCanvas"), () => {});
+tx2.start(SVEnc.signEnvelope("HELLO FROM THE STICKER. This message traveled as light — no internet, no server. A machine read it, checked the signature, and acted. That's SV-0001."));
+const demoScanner = new SVDec.StreamScanner(SVEnc.GOLDEN_PUB_HEX);
+let demoDone = false;
+setInterval(() => {
+  if (demoDone) return;
+  const c = document.getElementById("demoCanvas");
+  const ctx = c.getContext("2d", { willReadFrequently: true });
+  const d = ctx.getImageData(0, 0, c.width, c.height);
+  const bits = SVDec.decodeImageData(d.data, d.width, d.height);
+  if (!bits) return;
+  const r = demoScanner.feedBits(bits);
+  if (!r) { demoStatus.textContent = "assembling stream…"; return; }
+  demoDone = true;
+  const txt = new TextDecoder().decode(r.env.payload);
+  demoResult.classList.remove("hidden");
+  demoResult.innerHTML =
+    '<span class="sig ' + (r.sig === "valid" ? "okb" : "") + '">' +
+    (r.sig === "valid" ? "SIGNATURE VALID ✓" : r.sig.toUpperCase()) + "</span><br><br>" +
+    "action: 0x" + r.env.action.toString(16).padStart(4, "0") + "<br>" +
+    "payload: " + txt.replace(/</g, "&lt;");
+  demoStatus.textContent = "decoded + verified — your phone just did what a robot does.";
+  demoStatus.className = "tiny ok";
+}, 600);
+</script>
+</body>
+</html>
