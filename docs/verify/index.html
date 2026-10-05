@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify an anchored command — SV Codes</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Crect width='8' height='8' fill='white'/%3E%3Crect width='2' height='2' fill='%2300ffff'/%3E%3Crect x='6' width='2' height='2' fill='%23ff00ff'/%3E%3Crect y='6' width='2' height='2' fill='%23ffff00'/%3E%3Crect x='6' y='6' width='2' height='2' fill='%23ff0000'/%3E%3Crect x='3' y='3' width='1' height='1' fill='black'/%3E%3Crect x='4' y='4' width='1' height='1' fill='black'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#0a0c0e; --surface:#10141a; --surface2:#151b22; --border:#212a34;
+    --text:#d8e0e8; --dim:#8494a3; --cyan:#22d3ee; --magenta:#e879f9;
+    --yellow:#facc15; --red:#ef4444; --green:#34d399;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.6}
+  a{color:var(--cyan);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.85em}
+  nav{border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,12,14,.92);backdrop-filter:blur(8px);z-index:10}
+  nav .inner{max-width:1060px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.08em;color:var(--text)}
+  .logo:hover{text-decoration:none}
+  .logo svg{width:22px;height:22px}
+  nav .links{display:flex;gap:22px;font-size:14px}
+  nav .links a{color:var(--dim)}
+  nav .links a:hover{color:var(--text);text-decoration:none}
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px}
+  .hero{padding:72px 0 48px;border-bottom:1px solid var(--border)}
+  .kicker{color:var(--cyan);font-size:12px;letter-spacing:.22em;margin-bottom:18px}
+  .hero h1{font-size:clamp(28px,4.4vw,44px);line-height:1.15;margin-bottom:18px}
+  .hero h1 em{font-style:normal;color:var(--cyan)}
+  .hero p{color:var(--dim);max-width:60ch}
+  .layers{padding:48px 0 24px}
+  .layer{background:var(--surface);border:1px solid var(--border);border-radius:8px;
+    padding:22px 24px;margin-bottom:16px;position:relative;overflow:hidden}
+  .layer .tag{font-size:11px;letter-spacing:.18em;color:var(--dim);margin-bottom:6px}
+  .layer h2{font-size:19px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+  .layer .detail{color:var(--dim);font-size:14px}
+  .layer .detail code{color:var(--text);word-break:break-all}
+  .layer .status{position:absolute;top:20px;right:22px;font-size:13px;font-weight:600}
+  .status.wait{color:var(--dim)} .status.ok{color:var(--green)} .status.bad{color:var(--red)}
+  .layer.okl{border-color:rgba(52,211,153,.45)}
+  .layer.badl{border-color:rgba(239,68,68,.6)}
+  .payload-card{background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+    padding:16px 18px;margin:14px 0;font-size:15px}
+  .payload-card .q{color:var(--yellow);font-style:italic}
+  .verdict{text-align:center;padding:40px 0 8px}
+  .verdict .big{font-size:24px;font-weight:700;display:none}
+  .verdict .big.ok{display:block;color:var(--green)}
+  .verdict .big.bad{display:block;color:var(--red)}
+  .actions{display:flex;gap:12px;justify-content:center;padding:26px 0 8px;flex-wrap:wrap}
+  .btn{padding:12px 22px;border-radius:6px;font-size:15px;
+    border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer}
+  .btn:hover{border-color:var(--cyan);color:var(--cyan)}
+  .btn.primary{background:var(--cyan);border-color:var(--cyan);color:#06272c;font-weight:600}
+  .btn.primary:hover{background:#4be0f5;color:#06272c}
+  .note{color:var(--dim);font-size:13px;text-align:center;padding-bottom:40px}
+  .raw{border-top:1px solid var(--border);padding:36px 0 60px}
+  .raw h2{font-size:18px;margin-bottom:12px}
+  .raw dl{display:grid;grid-template-columns:130px 1fr;gap:6px 14px;font-size:13px}
+  .raw dt{color:var(--dim)}
+  .raw dd{word-break:break-all}
+  footer{border-top:1px solid var(--border);padding:28px 24px;text-align:center;color:var(--dim);font-size:13px}
+  .err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.4);color:var(--red);
+    border-radius:6px;padding:14px 18px;margin:16px 0;font-size:14px;display:none}
+</style>
+</head>
+<body>
+<nav><div class="inner">
+  <a class="logo" href="../">
+    <svg viewBox="0 0 8 8"><rect width="8" height="8" fill="white"/><rect width="2" height="2" fill="#00ffff"/><rect x="6" width="2" height="2" fill="#ff00ff"/><rect y="6" width="2" height="2" fill="#ffff00"/><rect x="6" y="6" width="2" height="2" fill="#ff0000"/><rect x="3" y="3" width="1" height="1" fill="black"/><rect x="4" y="4" width="1" height="1" fill="black"/></svg>
+    SV CODES
+  </a>
+  <div class="links">
+    <a href="../#demo">Broadcast</a>
+    <a href="../#scan">Scan</a>
+    <a href="../ble/">BLE</a>
+    <a href="https://github.com/futureman19/sv-codes">GitHub</a>
+  </div>
+</div></nav>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="kicker">BMP-0002 &nbsp;·&nbsp; BMP-0003 &nbsp;·&nbsp; LIVE ON BSV MAINNET</div>
+    <h1>A machine command that <em>paid its own way</em> — proven here, by your browser.</h1>
+    <p>On October 5, 2026, a signed command was anchored in a real BSV transaction and mined into
+       block&nbsp;969,795. Below, this page downloads the public ledger evidence and re-verifies
+       every layer itself — authority signature, fee payment, merkle inclusion, proof-of-work.
+       No server is trusted; the math runs on your device.</p>
+  </section>
+
+  <section class="layers">
+    <div class="payload-card">
+      The command being verified: <span class="q" id="payloadText">…</span>
+    </div>
+
+    <div class="layer" id="layer1">
+      <div class="tag">L1 — AUTHORITY (BMP-0000)</div>
+      <h2>Who signed it?</h2>
+      <div class="detail" id="l1detail">waiting…</div>
+      <div class="status wait" id="l1status">…</div>
+    </div>
+
+    <div class="layer" id="layer2">
+      <div class="tag">L2 — PAYMENT EVIDENCE (BMP-0002)</div>
+      <h2>Did it cost real money?</h2>
+      <div class="detail" id="l2detail">waiting…</div>
+      <div class="status wait" id="l2status">…</div>
+    </div>
+
+    <div class="layer" id="layer3">
+      <div class="tag">L3 — LEDGER INCLUSION (BMP-0003)</div>
+      <h2>Is it buried in the blockchain?</h2>
+      <div class="detail" id="l3detail">waiting…</div>
+      <div class="status wait" id="l3status">…</div>
+    </div>
+
+    <div class="verdict">
+      <div class="big ok" id="verdictOk">✓ VERIFIED — every layer checked by this browser, trusting no one</div>
+      <div class="big bad" id="verdictBad">✗ VERIFICATION FAILED</div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="freshBtn">Verify fresh from the chain ↻</button>
+      <a class="btn" id="wocLink" target="_blank" rel="noopener">See the transaction on WhatsOnChain ↗</a>
+    </div>
+    <div class="note" id="freshNote">“Fresh” mode re-downloads all evidence from a public API and re-runs the same checks — including the current burial depth.</div>
+    <div class="err" id="errBox"></div>
+  </section>
+
+  <section class="raw">
+    <h2>Evidence</h2>
+    <dl id="rawList"></dl>
+  </section>
+</div>
+
+<footer>
+  <a href="../">SV Codes</a> — machine-native Bitcoin commands ·
+  <a href="https://github.com/futureman19/sv-codes">protocol specs + code</a>
+</footer>
+
+<script src="../js/svc.js"></script>
+<script src="../js/anchor.js"></script>
+<script src="../js/spv.js"></script>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const hex = (b) => Array.from(b).map(x => x.toString(16).padStart(2, "0")).join("");
+const unhex = (h) => Uint8Array.from((h.match(/../g) || []).map(x => parseInt(x, 16)));
+const WOC = "https://api.whatsonchain.com/v1/bsv/main";
+
+let V2 = null, V3 = null;
+
+function setLayer(n, ok, detail){
+  const card = $("layer" + n), st = $("l" + n + "status");
+  $("l" + n + "detail").innerHTML = detail;
+  card.classList.toggle("okl", ok === true);
+  card.classList.toggle("badl", ok === false);
+  st.textContent = ok === true ? "✓ VALID" : ok === false ? "✗ INVALID" : "…";
+  st.className = "status " + (ok === true ? "ok" : ok === false ? "bad" : "wait");
+}
+function showErr(msg){ const e = $("errBox"); e.style.display = "block"; e.textContent = msg; }
+
+async function loadVectors(){
+  V2 = await (await fetch("../vectors/l2_live.json")).json();
+  V3 = await (await fetch("../vectors/l3_live.json")).json();
+}
+
+function renderRaw(rows){
+  $("rawList").innerHTML = rows.map(([k, v]) =>
+    `<dt>${k}</dt><dd class="mono">${v}</dd>`).join("");
+}
+
+function linkRow(label, txid){
+  return [label, `<a href="https://whatsonchain.com/tx/${txid}" target="_blank" rel="noopener">${txid}</a>`];
+}
+
+function runFrozen(){
+  $("verdictOk").className = "big"; $("verdictBad").className = "big";
+  $("errBox").style.display = "none";
+  try {
+    // ---- L1: envelope + authority signature (from the anchored TX) ----
+    const raw = unhex(V2.raw_tx_hex);
+    const envBytes = SVANCHOR.extractEnvelope(raw);
+    const env = SVC.parseEnvelope(envBytes);
+    $("payloadText").textContent = "“" + new TextDecoder().decode(env.payload) + "”";
+    const sigOk = SVC.ecdsaVerify(SVC.parsePubkey(V2.authority_pubkey),
+                                  env.signature, SVC.envelopeDigest(envBytes));
+    setLayer(1, sigOk,
+      `ECDSA/secp256k1 signature over the envelope verifies against the command authority
+       <code>${V2.authority_pubkey.slice(0, 18)}…</code> (public test key — this is a demo command).
+       Action <code>0x${env.action.toString(16).padStart(4, "0")}</code> (VENDOR), target
+       <code>0x${env.target_id.toString(16).padStart(8, "0")}</code>.`);
+    if (!sigOk) throw new Error("authority signature invalid");
+
+    // ---- L2: fee payment proven offline ----
+    SVANCHOR.verifyL2(raw, V2.prevouts, V2.authority_pubkey, new Map());
+    const tx = SVANCHOR.parseTx(raw);
+    const fee = V2.prevouts.reduce((s, p) => s + p.value, 0)
+              - tx.outputs.reduce((s, o) => s + Number(o.value), 0);
+    setLayer(2, true,
+      `The transaction's input signature verifies against the <em>ancestor-derived</em> prevout
+       (<code>${V2.prevouts[0].value.toLocaleString()}</code> sats from
+       <code>${V2.prevouts[0].txid.slice(0, 16)}…</code>), committing a real fee of
+       <code>${fee} sats</code>. The command and the payment are cryptographically bound.`);
+
+    // ---- L3: merkle inclusion + header PoW ----
+    const beef = unhex(V3.beef_hex);
+    const headers = [unhex(V3.subject_block.header_hex), unhex(V3.parent_block.header_hex)];
+    SVSPV.verifyL3(beef, V3.authority_pubkey, headers, new Map(), V3.tip_height_at_fetch, 1);
+    const hinfo = SVSPV.verifyHeader(headers[0]);
+    setLayer(3, true,
+      `BRC-74 merkle path walks from the command's txid to the block's merkle root; the root is found in a
+       locally-held header whose proof-of-work is valid
+       (<code>${hinfo.hash.slice(0, 18)}…</code>). Buried at height
+       <code>${V3.subject_block.height}</code>, <code>${V3.tip_height_at_fetch - V3.subject_block.height + 1}</code>
+       blocks deep at capture.`);
+    $("verdictOk").className = "big ok";
+    $("wocLink").href = "https://whatsonchain.com/tx/" + V2.txid;
+    renderRaw([
+      linkRow("command tx", V2.txid),
+      linkRow("funding tx", V2.prevouts[0].txid),
+      ["block hash", `<a href="https://whatsonchain.com/block/${V2.blockhash}" target="_blank" rel="noopener">${V2.blockhash}</a>`],
+      ["block height", V2.block_height],
+      ["fee", fee + " sats"],
+      ["BEEF size", V3.beef_hex.length / 2 + " bytes"],
+      ["authority (test)", V2.authority_pubkey],
+    ]);
+  } catch (e) {
+    $("verdictBad").className = "big bad";
+    showErr("Verification failed: " + e.message);
+  }
+}
+
+/* ---------- fresh mode: pull everything from WoC, rebuild the BEEF ---------- */
+async function getJson(u){ const r = await fetch(u); if (!r.ok) throw new Error("WoC " + r.status); return r.json(); }
+async function getText(u){ const r = await fetch(u); if (!r.ok) throw new Error("WoC " + r.status); return (await r.text()).trim(); }
+
+function headerFromWoC(j){
+  const parts = [
+    le32(j.version), revHex(j.previousblockhash), revHex(j.merkleroot),
+    le32(j.time), le32(parseInt(j.bits, 16)), le32(j.nonce)];
+  const out = new Uint8Array(80); let o = 0;
+  for (const p of parts){ out.set(p, o); o += p.length; }
+  return out;
+}
+function le32(n){ return Uint8Array.of(n & 255, (n >> 8) & 255, (n >> 16) & 255, (n >>> 24) & 255); }
+function revHex(h){ return unhex(h).reverse(); }
+function cat(...as){ const n = as.reduce((s, a) => s + a.length, 0);
+  const o = new Uint8Array(n); let p = 0; for (const a of as){ o.set(a, p); p += a.length; } return o; }
+
+async function runFresh(){
+  $("freshBtn").disabled = true; $("freshBtn").textContent = "fetching chain data…";
+  $("errBox").style.display = "none";
+  try {
+    const subj = V3.subject_txid, parent = V3.parent_txid;
+    const [subjHex, subjBumpHex, subjMeta] = await Promise.all([
+      getText(`${WOC}/tx/${subj}/hex`), getText(`${WOC}/tx/${subj}/proof/bump`), getJson(`${WOC}/tx/${subj}`)]);
+    const [parHex, parBumpHex, parMeta, chainInfo] = await Promise.all([
+      getText(`${WOC}/tx/${parent}/hex`), getText(`${WOC}/tx/${parent}/proof/bump`),
+      getJson(`${WOC}/tx/${parent}`), getJson(`${WOC}/chain/info`)]);
+    const subjHdrJ = await getJson(`${WOC}/block/${subjMeta.blockhash}/header`);
+    const sameBlock = parMeta.blockhash === subjMeta.blockhash;
+    const parHdrJ = sameBlock ? subjHdrJ : await getJson(`${WOC}/block/${parMeta.blockhash}/header`);
+
+    const beef = cat(
+      Uint8Array.of(1, 0, 0xBE, 0xEF), SVANCHOR.serVarint(2),
+      unhex(parBumpHex), unhex(subjBumpHex),
+      SVANCHOR.serVarint(2),
+      unhex(parHex), Uint8Array.of(1), SVANCHOR.serVarint(0),
+      unhex(subjHex), Uint8Array.of(1), SVANCHOR.serVarint(1));
+    const headers = [headerFromWoC(subjHdrJ), headerFromWoC(parHdrJ)];
+    const tip = chainInfo.blocks;
+
+    SVSPV.verifyL3(beef, V3.authority_pubkey, headers, new Map(), tip, 1);
+    const depth = tip - subjHdrJ.height + 1;
+    setLayer(3, true,
+      `Re-fetched live: BRC-74 merkle path verified, header PoW valid, and the command is now buried
+       <code>${depth}</code> blocks deep (tip <code>${tip}</code>). The chain has kept it since
+       <code>${subjHdrJ.height}</code>.`);
+    $("verdictOk").className = "big ok";
+    $("freshNote").textContent = "Live chain verification succeeded — depth " + depth + " blocks and counting.";
+  } catch (e) {
+    showErr("Fresh verification failed: " + e.message +
+            " (the frozen evidence above is verified offline and does not depend on this API)");
+  } finally {
+    $("freshBtn").disabled = false; $("freshBtn").textContent = "Verify fresh from the chain ↻";
+  }
+}
+
+(async function boot(){
+  try { await loadVectors(); runFrozen(); }
+  catch (e) { showErr("could not load evidence: " + e.message); }
+})();
+$("freshBtn").addEventListener("click", runFresh);
+</script>
+</body>
+</html>

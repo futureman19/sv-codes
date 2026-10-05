@@ -4,7 +4,7 @@
 |---|---|
 | **Number** | BMP-0003 |
 | **Title** | L3 — BEEF-Packaged Anchored Commands with SPV Inclusion Proof |
-| **Status** | **Draft** |
+| **Status** | **Stable** |
 | **Category** | Protocol Specification (Bitcoin Machine Protocol) |
 | **Created** | 2026-10-05 |
 | **Requires** | BMP-0000, BMP-0002 |
@@ -120,8 +120,11 @@ The PoC implements this document exactly:
   real-header PoW, corrupt-BUMP / corrupt-header / missing-header / wrong-
   authority / insufficient-depth rejection, L3 freshness enforcement.
 
-This spec remains **Draft** until a second independent implementation passes
-the same tests.
+This spec is **Stable** as of 2026-10-05: the JS verifier (`docs/js/spv.js`) reproduces
+every intermediate value byte-identically (BEEF parse, BUMP roots, header hashes) and
+matches all accept/reject behavior against the live proof vector — harness preserved at
+`poc/js_tests/svctest_l2l3.js`. The in-browser demo at `docs/verify/` runs the full
+pipeline against the frozen vector and can re-verify live from the chain.
 
 ## 7. References
 

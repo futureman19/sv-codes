@@ -33,8 +33,8 @@ faucet/   Sticker-campaign faucet (FastAPI on fly.io): pays sats to landing-page
 | [spec/BMP-0000](spec/BMP-0000-bitcoin-machine-protocol.md) | Bitcoin Machine Protocol — umbrella architecture, envelope schema, verification levels | **Stable** |
 | [spec/SV-0001](spec/SV-0001-sv-code-visual-matrix.md) | SV Code Visual Matrix Protocol — grid geometry, fountain coding, receiver pipeline | **Stable** |
 | [spec/BMP-0001](spec/BMP-0001-bmp-ble.md) | BMP-BLE — Bluetooth Low Energy connectionless transport | **Stable** |
-| [spec/BMP-0002](spec/BMP-0002-l2-on-chain-anchoring.md) | On-Chain Anchoring (L2) — envelopes in fee-paying transactions, offline payment evidence | **Draft** |
-| [spec/BMP-0003](spec/BMP-0003-l3-spv-inclusion.md) | SPV Inclusion (L3) — BEEF-packaged commands, BUMP merkle proofs vs local headers | **Draft** |
+| [spec/BMP-0002](spec/BMP-0002-l2-on-chain-anchoring.md) | On-Chain Anchoring (L2) — envelopes in fee-paying transactions, offline payment evidence | **Stable** |
+| [spec/BMP-0003](spec/BMP-0003-l3-spv-inclusion.md) | SPV Inclusion (L3) — BEEF-packaged commands, BUMP merkle proofs vs local headers | **Stable** |
 
 **Status labels:** *Draft* = proposed, not yet validated. *Stable* = two independent implementations (Python `poc/`, browser JS `docs/js/`) emit bit-identical frames and pass the golden test vectors in `poc/vectors/`. Where we align with existing BSV standards (BEEF / BRC-62, Atomic BEEF / BRC-95), that alignment is noted explicitly; no BRC conformance is claimed.
 

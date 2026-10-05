@@ -4,7 +4,7 @@
 |---|---|
 | **Number** | BMP-0002 |
 | **Title** | On-Chain Anchoring — BMP Envelopes Embedded in BSV Transactions |
-| **Status** | **Draft** |
+| **Status** | **Stable** |
 | **Category** | Protocol Specification (Bitcoin Machine Protocol) |
 | **Created** | 2026-10-05 |
 | **Requires** | BMP-0000 |
@@ -79,7 +79,10 @@ The PoC implements this document exactly:
 - `poc/tests/test_anchor.py` — build/parse/extract/verify, tamper rejection (wrong authority, forged evidence, zero fee, double-spend freshness), and end-to-end signature chains.
 - **Live mainnet proof:** an L2 command signed by the published test authority and paid by the PoC faucet key is broadcast and re-verified from the public ledger (txid recorded in `poc/vectors/l2_live.json`).
 
-This spec remains **Draft** until a second independent implementation passes the same tests.
+This spec is **Stable** as of 2026-10-05: the JS verifier (`docs/js/anchor.js`) reproduces
+every intermediate value byte-identically (parse facts, sighash digest, extracted envelope)
+and matches all accept/reject behavior against the live proof vector — harness preserved at
+`poc/js_tests/svctest_l2l3.js` (26 checks).
 
 ## 8. References
 

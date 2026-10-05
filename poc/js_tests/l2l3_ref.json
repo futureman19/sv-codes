@@ -1,0 +1,24 @@
+{
+  "l2": {
+    "txid": "4a6f612be1f8984ee13da679c1c5f7698f4d118304ca51ea98e895c4a977b3d1",
+    "version": 1,
+    "locktime": 0,
+    "n_inputs": 1,
+    "n_outputs": 2,
+    "output0_value": 0,
+    "output1_value": 49700,
+    "sighash_input0_hex": "bd8329e90bfe7eea4c6b3db4506d79fbb580bef25841f77cedd4ddc5fa545248",
+    "envelope_hex": "015356433100ff00000000000000006ac42789002c0fffaaf493c1567b52773f31167e6fe3c55af69884c4371178793e640e3e59412b18682556bf8030f2efce0b197cf01c243317d2c7bfc678610bdc28d4ed9fc448454c4c4f2c20434841494e2e205468697320636f6d6d616e64207061696420697473206f776e207761792e",
+    "pubkey_from_scriptsig_hex": "03f6ed560c8a398b44cef01c91c88be454eb066ba941db1b980bc2376038d3e57c"
+  },
+  "l3": {
+    "n_bumps": 2,
+    "n_txs": 2,
+    "subject_txid": "4a6f612be1f8984ee13da679c1c5f7698f4d118304ca51ea98e895c4a977b3d1",
+    "parent_txid": "ef5d1734f7af787296465da79971c50f11f31ace326c88ecbc8543019a1d8cbc",
+    "bump0_root_internal_hex": "858b5681054730fbd4412041ecc2f78be6ba86a0dbe33938e8f545710c2df9a0",
+    "bump1_root_internal_hex": "858b5681054730fbd4412041ecc2f78be6ba86a0dbe33938e8f545710c2df9a0",
+    "subject_header_hash": "000000000000000022a9f1e04649b3a8f7b05b0242fa30d988a880378b5c76f0",
+    "parent_header_hash": "000000000000000022a9f1e04649b3a8f7b05b0242fa30d988a880378b5c76f0"
+  }
+}
