@@ -33,6 +33,10 @@ class Reassembler {
       this._seq = seq; this._count = cnt; this._mtu = msd.length - HEADER;
       this._frags = new Map();
     } else if (cnt !== this._count || (msd.length - HEADER) !== this._mtu){
+      /* poisoned generation (spec §5.3): drop ALL buffered fragments — an
+         inconsistent fragment implies a different object sharing this seq.
+         Buffer re-arms on the next fragment; the cyclic stream heals. */
+      this._seq = null; this._count = 0; this._mtu = 0; this._frags = new Map();
       return null;
     }
     this._frags.set(idx, msd.subarray(HEADER));

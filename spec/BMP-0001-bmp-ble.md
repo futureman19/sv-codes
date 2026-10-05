@@ -94,14 +94,16 @@ Transmitters MUST advertise exactly one profile for a given stream. Receivers MU
 
 ## 5. Receiver behavior
 
-1. Scan (observer role). Filter: AD type `0xFF`, magic `"SV"`, `0 < Frag_Count`, `Frag_Index < Frag_Count`, structure lengths self-consistent.
+1. Scan (observer role). Filter: AD type `0xFF`, magic `"SV"`, `0 < Frag_Count`, `Frag_Index < Frag_Count`, structure lengths self-consistent. Malformed fragments are **silently dropped**.
 2. On first fragment of a `(Stream_Seq)` generation: start a set buffer. On `Stream_Seq` change: discard any incomplete previous generation and start fresh.
-3. When all `Frag_Count` indices are present: concatenate `Frag_Data`, truncate to `8 + Content_Length` padded to 32 bytes per stream framing, and verify:
+3. **Poisoned-generation rule (normative):** within a generation, a fragment whose `Frag_Count` or `Frag_Data` length disagrees with the generation's established values poisons the **entire** generation — the receiver MUST discard ALL buffered fragments of it, not merely the offending fragment. Rationale (adopted from BRC-130 §Reassembly): an inconsistent fragment implies two different objects sharing one `Stream_Seq` (e.g. transmitter restart with sequence reuse), and partial retention risks assembling an object no layer downstream is obligated to catch. The drop is self-healing: the buffer re-arms on the next fragment and the cyclic retransmission completes a later cycle.
+4. **Duplicate fragments** (same index, consistent fields) MUST be silently ignored (overwrite semantics). Receivers hold exactly one generation buffer — `O(one stream)`, so no TTL eviction is required; a partial generation simply completes on whichever cycle delivers its missing fragments.
+5. When all `Frag_Count` indices are present: concatenate `Frag_Data`, truncate to `8 + Content_Length` padded to 32 bytes per stream framing, and verify:
    - `Content_Length` sane (≤ 65535 + 85) and buffer long enough,
    - CRC32 over content matches,
    - **then** BMP-layer verification (BMP-0000 §4.3): signature check against provisioned authority keys before acting.
-4. CRC or parse failure: discard the whole generation and wait for the next cycle — never attempt partial interpretation.
-5. Receivers MUST tolerate duplicates, reordering, and arbitrary interleaving with other advertisers.
+6. CRC or parse failure: discard the whole generation and wait for the next cycle — never attempt partial interpretation.
+7. Receivers MUST tolerate duplicates, reordering, and arbitrary interleaving with other advertisers.
 
 Integrity is checked cheaply (CRC32) before expensively (ECDSA), mirroring SV-0001 §6.
 
@@ -119,6 +121,8 @@ The PoC (`poc/svcode/ble.py`) implements §3–§5 exactly and is exercised by `
 - Reassembly under 40% per-cycle fragment loss and random ordering, across multiple advertising cycles.
 - Generation change mid-assembly (old fragments discarded).
 - Malformed PDU rejection (bad magic, bad counts, truncated structures).
+- **Poisoned-generation rule (§5.3):** inconsistent-count and inconsistent-length fragments each discard the entire buffered generation; stream self-heals on a later cycle (both implementations).
+- Duplicate fragments are harmless (overwrite semantics).
 - Exact on-air byte layout of §3.2 (pack + parse a full 31-byte legacy PDU).
 - End-to-end: envelope → sign → stream → fragment → loss/shuffle cycles → reassemble → CRC32 → parse → signature verify.
 

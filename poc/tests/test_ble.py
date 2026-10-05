@@ -110,3 +110,52 @@ def test_on_air_layout():
     assert pdu[7:9] == b"SV"                                     # magic
     assert ble.unpack_pdu(pdu) == frags[0]
     assert ble.unpack_pdu(bytes(31)) is None
+
+
+def test_poisoned_generation_drops_all():
+    """spec §5.3: an inconsistent fragment poisons the WHOLE generation."""
+    stream = build_stream(signed_envelope(b"HALT on channel 7").serialize())
+    frags = ble.fragment(stream, stream_seq=3)
+    assert len(frags) >= 4
+    r = ble.Reassembler()
+    for f in frags[:3]:
+        r.feed(f)
+    bad = bytearray(frags[3]); bad[4] = frags[3][4] + 1  # count mismatch
+    assert r.feed(bytes(bad)) is None
+    # if the old buffer had survived, feeding the tail would complete here:
+    got = None
+    for f in frags[3:]:
+        got = r.feed(f) or got
+    assert got is None, "poisoned generation was not fully discarded"
+    # self-heal: the next full cycle completes cleanly and correctly
+    got = None
+    for f in frags:
+        got = r.feed(f) or got
+    assert got == stream
+
+
+def test_poisoned_generation_mtu_mismatch():
+    stream = build_stream(signed_envelope(b"HALT on channel 7").serialize())
+    frags = ble.fragment(stream, stream_seq=3)
+    r = ble.Reassembler()
+    r.feed(frags[0]); r.feed(frags[1])
+    short = frags[2][:-3]  # same seq/count, shorter data → implied-grid mismatch
+    assert r.feed(short) is None
+    got = None
+    for f in frags[2:]:
+        got = r.feed(f) or got
+    assert got is None, "poisoned generation was not fully discarded"
+    got = None
+    for f in frags:
+        got = r.feed(f) or got
+    assert got == stream
+
+
+def test_duplicate_fragments_harmless():
+    stream = build_stream(signed_envelope(b"HALT on channel 7").serialize())
+    frags = ble.fragment(stream, stream_seq=3)
+    r = ble.Reassembler()
+    got = None
+    for f in [frags[0], frags[0], frags[1], frags[1], frags[2], frags[0]] + frags:
+        got = r.feed(f) or got
+    assert got == stream

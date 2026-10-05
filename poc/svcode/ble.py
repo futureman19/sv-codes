@@ -52,7 +52,12 @@ class Reassembler:
             self._seq, self._count, self._mtu, self._frags = seq, cnt, len(msd) - _HEADER, {}
         else:
             if cnt != self._count or (len(msd) - _HEADER) != self._mtu:
-                return None  # inconsistent fragment within a generation
+                # poisoned generation (spec §5.3): drop ALL buffered fragments —
+                # an inconsistent fragment implies a different object sharing this
+                # Stream_Seq (e.g. transmitter restart with seq reuse). The buffer
+                # re-arms on the next fragment; the cyclic stream heals.
+                self._seq, self._count, self._mtu, self._frags = None, 0, 0, {}
+                return None
         self._frags[idx] = msd[_HEADER:]
         if len(self._frags) < self._count:
             return None
