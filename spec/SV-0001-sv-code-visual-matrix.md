@@ -74,8 +74,11 @@ The 2,704-bit payload matrix of each frame is laid out as:
 |---|---|---|---|
 | 0–15 | 16 | `Seed` | uint16 BE fountain seed for this frame |
 | 16–23 | 8 | `Content_Type` | `0x01` BMP envelope · `0x02` raw BSV TX · `0x03` BEEF package (BRC-62/95-aligned) · other values reserved |
-| 24–2583 | 2560 | `Symbols` | Ten 256-bit LT-encoded symbols, slots `i = 0..9` |
-| 2584–2703 | 120 | `Reserved` | Zero. Receivers MUST ignore. |
+| 24–39 | 16 | `K` | uint16 BE count of 256-bit source symbols in the stream |
+| 40–2599 | 2560 | `Symbols` | Ten 256-bit LT-encoded symbols, slots `i = 0..9` |
+| 2600–2703 | 104 | `Reserved` | Zero. Receivers MUST ignore. |
+
+`K` is carried in every frame because the degree distribution and index selection are K-dependent: without it a receiver cannot reconstruct a symbol's source-index set. All frames of one stream carry identical `K` and `Content_Type`.
 
 ### 3.1 Streams
 
@@ -101,7 +104,7 @@ For a frame with `Seed = s`, each symbol slot `i ∈ 0..9` is generated independ
 3. Select `d` distinct source-symbol indices by repeated draws taken mod `K`, re-drawing on collision.
 4. XOR the selected source symbols → the 256-bit encoded symbol for slot `i`.
 
-Decoding is standard LT belief propagation / Gaussian elimination over GF(2): the receiver collects `(s, i) → (degree, index-set, symbol)` tuples from any frames in any order until all `K` source symbols are solved, then reassembles the stream, checks `Content_Length` and `CRC32`, and hands `content` to the BMP layer.
+Decoding is standard LT belief propagation / Gaussian elimination over GF(2): the receiver reads `K` from the frame header, reconstructs each symbol's `(degree, index-set)` from `(Seed, slot)`, and collects tuples from any frames in any order until all `K` source symbols are solved; then it reassembles the stream, checks `Content_Length` and `CRC32`, and hands `content` to the BMP layer. Receivers key accumulation state by `K`; if full rank is reached but CRC32 fails (interleaved streams with equal `K`), the receiver discards that state and keeps collecting — the transmitter's loop guarantees a clean majority of one stream.
 
 **Reception overhead:** expect full recovery after roughly `K × 1.05` symbols. Since each frame carries 10 symbols, a `K = 16` stream (≈ 500-byte content) typically completes in 2 frames.
 
@@ -140,7 +143,7 @@ Normative steps:
 1. **Color masking.** Convert the frame to HSV (OpenCV hue scale 0–179). Produce four binary masks using the §2.1 ranges.
 2. **Centroid extraction.** For each mask, compute the spatial centroid
    `(x̄, ȳ) = (M10/M00, M01/M00)`. Four valid anchors MUST be found; otherwise discard the camera frame.
-3. **Homography.** Compute the 3×3 perspective transform mapping the detected centroids to canonical anchor centers `(1.5,1.5) (1.5,61.5) (61.5,1.5) (61.5,61.5)`, with anchor identity resolved by color. Warp to a canonical 64×64 image (`cv2.getPerspectiveTransform` + `cv2.warpPerspective`).
+3. **Homography.** Compute the 3×3 perspective transform mapping the detected centroids to canonical anchor centers `(2,2) (62,2) (2,62) (62,62)` — the 4×4 anchor blocks span cells 0–3 and 60–63, whose centers are cell coordinates 2.0 and 62.0 — with anchor identity resolved by color. Warp to a canonical 64×64 image (`cv2.getPerspectiveTransform` + `cv2.warpPerspective`).
 4. **Binarization.** For each payload cell `(r,c)`, sample the canonical image at `(r+0.5, c+0.5)` — a 3×3 majority vote around the center is RECOMMENDED for robustness — and threshold: `< θ → 1` (black), `≥ θ → 0` (white). `θ` may be fixed (128) or Otsu-adaptive per frame.
 5. **Frame parse.** Read §3 fields row-major from the payload matrix.
 6. **Solve.** Feed symbols to the LT decoder. On completion, validate `Content_Length` + `CRC32`, then dispatch by `Content_Type` to BMP-0000 verification (signature / SPV per tier).
@@ -157,13 +160,14 @@ Receivers MUST treat any failed step as a dropped frame, never as a partial resu
 
 ## 8. Test vectors
 
-Deferred. The reference PoC (repository `poc/`) will publish:
+Published in `poc/vectors/`:
 
-1. A golden envelope + authority keypair with a known-good signature.
-2. A static-mode frame PNG decoding to that envelope.
-3. An animated multi-frame stream (with forced frame loss) decoding to a type-`0x02` raw transaction.
+1. `vectors.json` — golden authority keypair (test-only private key intentionally included), a signed `0x00FF` VENDOR envelope ("HELLO, MACHINE.", nonce 1791504000), and a signed `0x00A1 MOVE_TO` envelope with JSON payload; envelope hex, signatures, CRC32, and K for each.
+2. `static_frame.png` — vector 1 as a static-mode (seed 0) SV Code render.
+3. `fountain/frame_*.png` — vector 2 as a six-frame fountain stream (seeds 1–6).
+4. `js_frames.json` — vector-2 frames emitted by the independent JavaScript transmitter (`docs/index.html`); the PoC suite asserts **bit-exact parity** between the JS and Python encoders.
 
-Both specs graduate from *Draft* to *Stable* when these vectors exist and two independent decoders pass them.
+Reference-implementation status (`poc/tests/`, 13 tests passing): both vectors round-trip through clean renders, perspective-skewed/noisy/blurred renders, and 50% random symbol loss; both envelope signatures verify. This spec remains **Draft** until a second independent *decoder* passes these vectors (the website is a transmitter; a browser-side decoder is the planned next milestone).
 
 ## 9. References
 

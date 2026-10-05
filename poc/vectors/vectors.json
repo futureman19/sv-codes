@@ -1,0 +1,34 @@
+{
+  "warning": "TEST VECTORS ONLY \u2014 the private key is published intentionally.",
+  "private_key_hex": "1fbf0a5d03e1b7db0ef88a9d107d143e8bc2710e4e9ae656956e0f948037f1ba",
+  "authority_pubkey_compressed": "02ac1b5e6915999ebbc89be7405a9fa297b0c549583a9cd3aaab750c2abc5aaeb1",
+  "nonce": 1791504000,
+  "vector1": {
+    "kind": "static",
+    "payload_text": "HELLO, MACHINE.",
+    "action": "0x00FF VENDOR",
+    "envelope_hex": "015356433100ff00000000000000006ac82e80000fee736961c33bad120b210ec2bd2765064a79985b63902e228706edbe0926865153a61ce56fec1137f8a553172828b12c7a03e2ca6e777cd495c46968511a07b548454c4c4f2c204d414348494e452e",
+    "signature_hex": "ee736961c33bad120b210ec2bd2765064a79985b63902e228706edbe0926865153a61ce56fec1137f8a553172828b12c7a03e2ca6e777cd495c46968511a07b5",
+    "crc32": "0xF599D2FF",
+    "k": 4,
+    "image": "static_frame.png"
+  },
+  "vector2": {
+    "kind": "fountain",
+    "action": "0x00A1 MOVE_TO",
+    "params": {
+      "x_e6": 37774900,
+      "y_e6": -122419400
+    },
+    "payload_json": {
+      "note": "Delivery bounty #1: proceed to coordinates, scan the next SV Code on arrival, claim 5000 sats. Route via the pier; avoid the construction zone on 5th. Confirm arrival with a signed REPORT_STATUS envelope back to dispatch.",
+      "speed_mm_s": 500
+    },
+    "envelope_hex": "015356433100a102406634f8b407386ac82e8000fccb24662b2f283a105ceffdee9976b2a58989ff9d05df44996def3e60e9f151ac4c127b674496575d27f03ba43238c18079383c9d957a83e38ed88a3d4bb2c0fd7b226e6f7465223a202244656c697665727920626f756e74792023313a2070726f6365656420746f20636f6f7264696e617465732c207363616e20746865206e65787420535620436f6465206f6e206172726976616c2c20636c61696d203530303020736174732e20526f757465207669612074686520706965723b2061766f69642074686520636f6e737472756374696f6e207a6f6e65206f6e203574682e20436f6e6669726d206172726976616c20776974682061207369676e6564205245504f52545f53544154555320656e76656c6f7065206261636b20746f2064697370617463682e222c202273706565645f6d6d5f73223a203530307d",
+    "signature_hex": "cb24662b2f283a105ceffdee9976b2a58989ff9d05df44996def3e60e9f151ac4c127b674496575d27f03ba43238c18079383c9d957a83e38ed88a3d4bb2c0fd",
+    "crc32": "0x0BE28EBE",
+    "k": 11,
+    "images": "fountain/frame_*.png (seeds 1..6)"
+  },
+  "js_python_parity": true
+}

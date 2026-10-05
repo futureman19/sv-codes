@@ -1,0 +1,5 @@
+ecdsa>=0.19
+pillow>=11
+numpy>=2
+opencv-python-headless>=4.8
+pytest>=8

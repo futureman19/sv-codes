@@ -434,7 +434,7 @@ function bitWriter(){
 }
 function buildFrame(symbols, seed, ctype, K, cdf){
   const w=bitWriter();
-  w.put(seed,16); w.put(ctype,8);
+  w.put(seed,16); w.put(ctype,8); w.put(K,16);
   for(let slot=0;slot<10;slot++){
     let sym;
     if(seed===0){ // static mode: identity encoding

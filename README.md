@@ -33,9 +33,9 @@ poc/      Reference implementation: SV Code encoder + scanner (Phase 3)
 
 ## Roadmap
 
-1. **Protocol** ← you are here. Umbrella spec + SV Code visual matrix spec.
-2. **Website** — public home for the specs, visual explainer, live encoder demo.
-3. **PoC** — Python reference implementation: a transmitter that streams SV Codes on screen, and a receiver that decodes them from a webcam feed and verifies the payload signature. This graduates both specs from *Draft* to *Stable* and produces the test vectors.
+1. **Protocol** ✓ — Umbrella spec + SV Code visual matrix spec.
+2. **Website** ✓ — <https://futureman19.github.io/sv-codes/>, with a live in-browser SV Code transmitter implementing the draft wire format.
+3. **PoC** ✓ — Python reference implementation (`poc/`): signed envelopes, fountain codec, OpenCV decoder, webcam scanner, and golden test vectors (`poc/vectors/`). 13 tests passing, including JS↔Python bit-exact encoder parity and decode under skew/noise/blur. Specs remain **Draft** pending a second independent decoder.
 
 Later transports on the BMP registry (reserved, not yet specified): BLE advertising frames, dual-interface RFID (ST25DV), LoRa/shortwave radio.
 
