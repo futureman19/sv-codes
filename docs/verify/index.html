@@ -255,11 +255,14 @@ async function runFresh(){
   $("errBox").style.display = "none";
   try {
     const subj = V3.subject_txid, parent = V3.parent_txid;
-    const [subjHex, subjBumpHex, subjMeta] = await Promise.all([
-      getText(`${WOC}/tx/${subj}/hex`), getText(`${WOC}/tx/${subj}/proof/bump`), getJson(`${WOC}/tx/${subj}`)]);
-    const [parHex, parBumpHex, parMeta, chainInfo] = await Promise.all([
-      getText(`${WOC}/tx/${parent}/hex`), getText(`${WOC}/tx/${parent}/proof/bump`),
-      getJson(`${WOC}/tx/${parent}`), getJson(`${WOC}/chain/info`)]);
+    // sequential: WoC connection-resets parallel bursts without an API key
+    const subjHex  = await getText(`${WOC}/tx/${subj}/hex`);
+    const subjBumpHex = await getText(`${WOC}/tx/${subj}/proof/bump`);
+    const subjMeta = await getJson(`${WOC}/tx/${subj}`);
+    const parHex   = await getText(`${WOC}/tx/${parent}/hex`);
+    const parBumpHex = await getText(`${WOC}/tx/${parent}/proof/bump`);
+    const parMeta  = await getJson(`${WOC}/tx/${parent}`);
+    const chainInfo = await getJson(`${WOC}/chain/info`);
     const subjHdrJ = await getJson(`${WOC}/block/${subjMeta.blockhash}/header`);
     const sameBlock = parMeta.blockhash === subjMeta.blockhash;
     const parHdrJ = sameBlock ? subjHdrJ : await getJson(`${WOC}/block/${parMeta.blockhash}/header`);
