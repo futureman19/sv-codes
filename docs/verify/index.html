@@ -191,7 +191,7 @@ function runFrozen(){
       `ECDSA/secp256k1 signature over the envelope verifies against the command authority
        <code>${V2.authority_pubkey.slice(0, 18)}…</code> (public test key — this is a demo command).
        Action <code>0x${env.action.toString(16).padStart(4, "0")}</code> (VENDOR), target
-       <code>0x${env.target_id.toString(16).padStart(8, "0")}</code>.`);
+       <code>0x${env.targetId.toString(16).padStart(8, "0")}</code>.`);
     if (!sigOk) throw new Error("authority signature invalid");
 
     // ---- L2: fee payment proven offline ----
