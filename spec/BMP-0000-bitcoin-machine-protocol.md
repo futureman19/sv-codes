@@ -120,8 +120,8 @@ Each transport gets its own BMP-numbered specification. A transport spec defines
 
 | Transport spec | Bearer | Status |
 |---|---|---|
-| **SV-0001** | SV Code visual matrix (camera-readable animated binary grids) | **Draft** (companion document) |
-| BMP-BLE *(reserved)* | Bluetooth Low Energy connectionless advertising | Not yet specified |
+| **SV-0001** | SV Code visual matrix (camera-readable animated binary grids) | **Stable** |
+| **BMP-0001** (BMP-BLE) | Bluetooth Low Energy connectionless advertising | **Draft** (reference codec in `poc/`) |
 | BMP-RFID *(reserved)* | Dual-interface RFID (ST25DV-class) shared-memory tags | Not yet specified |
 | BMP-LoRa *(reserved)* | LoRa / shortwave radio broadcast | Not yet specified |
 
