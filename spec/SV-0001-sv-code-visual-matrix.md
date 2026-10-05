@@ -4,7 +4,7 @@
 |---|---|
 | **Number** | SV-0001 |
 | **Title** | SV Code — Machine-Native Visual Matrix for Streaming BSV Payloads |
-| **Status** | **Draft** (graduates to *Stable* when the reference PoC publishes test vectors) |
+| **Status** | **Stable** (two independent encoders emit bit-identical frames; two independent decoders — Python `poc/` + browser JS `docs/js/` — pass the published test vectors) |
 | **Category** | Transport Specification (Bitcoin Machine Protocol) |
 | **Created** | 2026-10-05 |
 | **Requires** | BMP-0000 |
@@ -165,9 +165,9 @@ Published in `poc/vectors/`:
 1. `vectors.json` — golden authority keypair (test-only private key intentionally included), a signed `0x00FF` VENDOR envelope ("HELLO, MACHINE.", nonce 1791504000), and a signed `0x00A1 MOVE_TO` envelope with JSON payload; envelope hex, signatures, CRC32, and K for each.
 2. `static_frame.png` — vector 1 as a static-mode (seed 0) SV Code render.
 3. `fountain/frame_*.png` — vector 2 as a six-frame fountain stream (seeds 1–6).
-4. `js_frames.json` — vector-2 frames emitted by the independent JavaScript transmitter (`docs/index.html`); the PoC suite asserts **bit-exact parity** between the JS and Python encoders.
+4. `js_frames.json` — vector-2 frames emitted by the independent JavaScript transmitter (`docs/js/svc.js`); the PoC suite asserts **bit-exact parity** between the JS and Python encoders.
 
-Reference-implementation status (`poc/tests/`, 13 tests passing): both vectors round-trip through clean renders, perspective-skewed/noisy/blurred renders, and 50% random symbol loss; both envelope signatures verify. This spec remains **Draft** until a second independent *decoder* passes these vectors (the website is a transmitter; a browser-side decoder is the planned next milestone).
+Reference-implementation status: both vectors round-trip through clean renders, perspective-skewed/noisy/blurred renders, and 50% random symbol loss in **two independent decoders** — the Python reference (`poc/tests/`, 13 tests) and the browser JS decoder (`docs/js/decoder.js`, exercised against synthetic camera photos in `poc/fixtures/`); both verify both envelope signatures. Encoders are bit-exact across the two implementations. **Graduated to Stable 2026-10-05.**
 
 ## 9. References
 

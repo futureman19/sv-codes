@@ -34,26 +34,20 @@ GOLDEN_NONCE = 1791504000  # fixed: deterministic vectors
 
 
 def js_frames(envelope_hex: str, seqs: list[int]) -> list[dict]:
-    """Run the website's own encoder (extracted from docs/index.html) in Node."""
+    """Run the website's own encoder (docs/js/svc.js module) in Node."""
     harness = r"""
-const fs = require('fs');
-const html = fs.readFileSync(process.argv[2], 'utf8');
-const src = html.match(/<script>([\s\S]*?)<\/script>/)[1];
-const fakeCtx = { set fillStyle(v){}, fillRect(){} };
-global.document = { getElementById: (id) =>
-  id.endsWith('Canvas') ? { width: 640, height: 640, getContext: () => fakeCtx }
-                        : { addEventListener(){}, value: 'x', textContent: '' } };
-eval(src + ';globalThis.__E={buildStream,solitonCDF,buildFrame};');
+const SVC = require(process.argv[2]);
 const content = Uint8Array.from(Buffer.from(process.argv[3], 'hex'));
 const seqs = JSON.parse(process.argv[4]);
-const stream = __E.buildStream(content);
+const stream = SVC.buildStream(content);
 const K = stream.length / 32;
 const symbols = []; for (let i = 0; i < K; i++) symbols.push(stream.subarray(i*32, i*32+32));
-const cdf = __E.solitonCDF(K);
+const cdf = SVC.solitonCDF(K);
 const out = [];
 for (const seq of seqs) {
   const seed = (K <= 10) ? 0 : (seq % 65535) + 1;
-  out.push({ seq, seed, bits: Array.from(__E.buildFrame(symbols, seed, 1, K, cdf)) });
+  const enc = []; for (let s = 0; s < 10; s++) enc.push(SVC.encodeSymbol(symbols, cdf, seed, s));
+  out.push({ seq, seed, bits: Array.from(SVC.packFrame(enc, seed, 1, K)) });
 }
 console.log(JSON.stringify(out));
 """
@@ -62,7 +56,8 @@ console.log(JSON.stringify(out));
         harness_path = f.name
     try:
         out = subprocess.run(
-            ["node", harness_path, str(INDEX_HTML), envelope_hex, json.dumps(seqs)],
+            ["node", harness_path, str(ROOT.parent / "docs" / "js" / "svc.js"),
+             envelope_hex, json.dumps(seqs)],
             capture_output=True, text=True, check=True,
         )
     except FileNotFoundError:

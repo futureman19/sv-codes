@@ -4,7 +4,7 @@
 |---|---|
 | **Number** | BMP-0000 |
 | **Title** | Bitcoin Machine Protocol — Architecture, Envelope, and Verification Model |
-| **Status** | **Draft** (not yet validated by a reference implementation) |
+| **Status** | **Stable** (validated by two independent implementations — Python `poc/` + browser JS `docs/js/` — against published test vectors) |
 | **Category** | Protocol Specification |
 | **Created** | 2026-10-05 |
 | **Requires** | None (root document) |

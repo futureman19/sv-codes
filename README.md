@@ -26,10 +26,10 @@ poc/      Reference implementation: SV Code encoder + scanner (Phase 3)
 
 | Document | Title | Status |
 |---|---|---|
-| [spec/BMP-0000](spec/BMP-0000-bitcoin-machine-protocol.md) | Bitcoin Machine Protocol — umbrella architecture, envelope schema, verification levels | **Draft** |
-| [spec/SV-0001](spec/SV-0001-sv-code-visual-matrix.md) | SV Code Visual Matrix Protocol — grid geometry, fountain coding, receiver pipeline | **Draft** |
+| [spec/BMP-0000](spec/BMP-0000-bitcoin-machine-protocol.md) | Bitcoin Machine Protocol — umbrella architecture, envelope schema, verification levels | **Stable** |
+| [spec/SV-0001](spec/SV-0001-sv-code-visual-matrix.md) | SV Code Visual Matrix Protocol — grid geometry, fountain coding, receiver pipeline | **Stable** |
 
-**Status labels:** *Draft* = proposed, not yet validated by a reference implementation. *Stable* = validated by the PoC with published test vectors. Nothing here claims conformance to any BRC; where we align with existing BSV standards (BEEF / BRC-62, Atomic BEEF / BRC-95), that alignment is noted explicitly.
+**Status labels:** *Draft* = proposed, not yet validated. *Stable* = two independent implementations (Python `poc/`, browser JS `docs/js/`) emit bit-identical frames and pass the golden test vectors in `poc/vectors/`. Where we align with existing BSV standards (BEEF / BRC-62, Atomic BEEF / BRC-95), that alignment is noted explicitly; no BRC conformance is claimed.
 
 ## Roadmap
 
