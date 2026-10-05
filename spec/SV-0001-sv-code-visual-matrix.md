@@ -95,10 +95,10 @@ The stream is split into `K = ceil(stream_bits / 256)` **source symbols** of 256
 
 For a frame with `Seed = s`, each symbol slot `i ∈ 0..9` is generated independently:
 
-1. Derive a deterministic random byte stream:
-   `R(s, i) = SHA-256( "SV1" ‖ uint16_BE s ‖ uint8 i )`, extended by re-hashing with a counter byte as needed.
-2. Sample a degree `d` from the **Robust Soliton distribution** over `K` (parameters `c = 0.1`, `δ = 0.5` — locked by test vectors when the spec graduates).
-3. Select `d` distinct source-symbol indices uniformly from `0..K-1` using `R(s, i)`.
+1. Derive a deterministic random byte stream from SHA-256 in counter mode:
+   `R(s, i)` = concatenation over `j = 0, 1, 2, …` of `SHA-256( 0x53 0x56 0x31 ("SV1") ‖ uint16_BE s ‖ uint8 i ‖ uint32_BE j )`. Bytes are consumed sequentially, four at a time as big-endian uint32 draws.
+2. Sample a degree `d` from the **Robust Soliton distribution** over `K` (parameters `c = 0.1`, `δ = 0.5`) by inverse-CDF on the first draw: `u = draw₀ / 2³²`. (Normative CDF locked by test vectors when the spec graduates.)
+3. Select `d` distinct source-symbol indices by repeated draws taken mod `K`, re-drawing on collision.
 4. XOR the selected source symbols → the 256-bit encoded symbol for slot `i`.
 
 Decoding is standard LT belief propagation / Gaussian elimination over GF(2): the receiver collects `(s, i) → (degree, index-set, symbol)` tuples from any frames in any order until all `K` source symbols are solved, then reassembles the stream, checks `Content_Length` and `CRC32`, and hands `content` to the BMP layer.
