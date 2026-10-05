@@ -92,7 +92,7 @@ A machine implements the highest tier its hardware allows, and MAY accept lower 
 |---|---|---|---|
 | **L1** | BMP Envelope | §4.3 signature against known authority key | None (fully offline) |
 | **L2** | Raw BSV transaction containing the envelope in an `OP_FALSE OP_RETURN` output, plus prevout evidence (BMP-0002) | Envelope signature **and** offline transaction validity per BMP-0002 §5 (input signatures verified against evidenced prevouts, fee > 0, outpoint freshness) | None to *receive* or verify; settlement checking deferred |
-| **L3** | Transaction packaged with SPV evidence — BEEF (BRC-62) or Atomic BEEF (BRC-95), with BUMP merkle paths | Envelope signature, transaction validity, **and** merkle inclusion proof against locally held block headers | None to verify; headers obtained occasionally by any means |
+| **L3** | Transaction packaged with SPV evidence — BEEF (BRC-62) or Atomic BEEF (BRC-95), with BUMP merkle paths (BRC-74); normative pipeline in BMP-0003 | Envelope signature, transaction validity, **and** merkle inclusion proof against locally held block headers (PoW-verified) | None to verify; headers obtained occasionally by any means |
 
 **Alignment note:** BEEF/Atomic BEEF/BUMP references indicate *format alignment* with the named BSV standards, not a conformance claim. Canonical text: <https://bsv.brc.dev/>. If a conflict exists between this document and those standards, the standards win for tiers L2/L3.
 
