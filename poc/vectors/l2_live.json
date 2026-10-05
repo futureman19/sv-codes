@@ -1,7 +1,23 @@
 {
-  "status": "in_progress",
-  "payer_pubkey": "0381666e30f9989fbbebe810fddc1bf3972e591a8b2c7663b0d3740bd1a2bbec57",
-  "payer_priv_hex": "a4d7130830ba20bf3309a65cff6b47e900a3a37f3195aef20d546365bc9e2eb5",
-  "payer_address": "1FBcZfcqbo8YLyXMTUn5Y9whrSX3nzVT1v",
-  "note": "recovery record written before any funds move"
+  "note": "Live BMP-0002 L2 proof on BSV mainnet. Payer key is a fresh disposable demo key (published intentionally; it holds no funds \u2014 change returned to the faucet). Authority key is the published golden TEST key from vectors.json.",
+  "txid": "4a6f612be1f8984ee13da679c1c5f7698f4d118304ca51ea98e895c4a977b3d1",
+  "claim_txid": "ef5d1734f7af787296465da79971c50f11f31ace326c88ecbc8543019a1d8cbc",
+  "network": "main",
+  "fee_sats": 300,
+  "payload_text": "HELLO, CHAIN. This command paid its own way.",
+  "envelope_hex": "015356433100ff00000000000000006ac42789002c0fffaaf493c1567b52773f31167e6fe3c55af69884c4371178793e640e3e59412b18682556bf8030f2efce0b197cf01c243317d2c7bfc678610bdc28d4ed9fc448454c4c4f2c20434841494e2e205468697320636f6d6d616e64207061696420697473206f776e207761792e",
+  "authority_pubkey": "02ac1b5e6915999ebbc89be7405a9fa297b0c549583a9cd3aaab750c2abc5aaeb1",
+  "payer_pubkey": "03f6ed560c8a398b44cef01c91c88be454eb066ba941db1b980bc2376038d3e57c",
+  "payer_priv_hex": "d291f3d7caf4886889627f1cd3e2ae4b12a34a484f379fa44bd7e238e473242e",
+  "prevouts": [
+    {
+      "txid": "ef5d1734f7af787296465da79971c50f11f31ace326c88ecbc8543019a1d8cbc",
+      "vout": 0,
+      "value": 50000,
+      "script_hex": "76a914b7f044e2f0602177b53a3a1d3e7e577e222b79e588ac"
+    }
+  ],
+  "change_returned_to": "1FpHQ4VrLYGp1sLDNXs5Cxh3x8KE4opYgU",
+  "verify_from_ledger": true,
+  "timestamp": 1791240074
 }
