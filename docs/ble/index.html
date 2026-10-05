@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMP-BLE Receiver — SV Codes</title>
+<meta name="description" content="Receive signed Bitcoin commands over Bluetooth Low Energy — no pairing, no connection, no account.">
+<style>
+  :root{
+    --bg:#0a0c0e; --surface:#10141a; --surface2:#151b22; --border:#212a34;
+    --text:#d8e0e8; --dim:#8494a3; --cyan:#22d3ee; --green:#34d399; --yellow:#facc15; --red:#ef4444;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:720px;margin:0 auto;padding:0 20px}
+  section{padding:40px 0;border-bottom:1px solid var(--border)}
+  .kick{color:var(--cyan);font-size:11px;letter-spacing:.22em;margin-bottom:14px}
+  h1{font-size:24px;line-height:1.25;margin-bottom:14px;font-weight:600}
+  h2{font-size:18px;margin-bottom:14px;font-weight:600}
+  p{color:var(--dim);margin-bottom:12px}
+  p b{color:var(--text)}
+  a{color:var(--cyan)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;margin:16px 0}
+  .btn{display:inline-block;font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.04em;padding:13px 22px;border-radius:8px;border:1px solid var(--cyan);background:var(--cyan);color:#06272c;cursor:pointer}
+  .btn:disabled{opacity:.5}
+  .btn.ghost{background:transparent;color:var(--cyan)}
+  .mono-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:11.5px;word-break:break-all;color:var(--text);margin:10px 0;white-space:pre-wrap}
+  .label{font-size:10.5px;letter-spacing:.14em;color:var(--dim);margin-bottom:4px}
+  .ok{color:var(--green)} .warn{color:var(--yellow)} .err{color:var(--red)} .dim{color:var(--dim)}
+  .hidden{display:none!important}
+  .stat-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #1a222b;font-size:13px}
+  .stat-row span{color:var(--dim)} .stat-row b{color:var(--cyan);font-weight:600}
+  .sig{padding:2px 8px;border-radius:3px;font-size:11px;letter-spacing:.08em}
+  .sig.okb{border:1px solid var(--green);color:var(--green)}
+  ol{color:var(--dim);padding-left:22px} ol li{margin-bottom:8px} ol b{color:var(--text)}
+  .nav{padding:18px 0;font-size:13px}
+</style>
+</head>
+<body>
+
+<section>
+  <div class="wrap">
+    <div class="nav"><a href="../">← SV·CODES</a></div>
+    <div class="kick">BMP-0001 · BMP-BLE · LIVE RECEIVER</div>
+    <h1>Listen for Bitcoin commands in the air.</h1>
+    <p>A BMP-BLE transmitter broadcasts signed commands as ordinary Bluetooth advertisements — <b>no pairing, no connection, no account</b>. This page is a receiver: it scans the air, reassembles the fragments, checks integrity, and verifies the cryptographic signature. Everything happens on your device.</p>
+
+    <div class="card">
+      <div class="label">RADIO RECEIVER</div>
+      <p style="margin-bottom:14px" id="bleIntro">Requires Chrome on Android (or desktop Chrome with the experimental-web-platform-features flag), with Bluetooth on.</p>
+      <button class="btn" id="scanBtn">Start scanning</button>
+      <div id="scanStats" class="hidden" style="margin-top:14px">
+        <div class="stat-row"><span>advertisements seen</span><b id="stAdv">0</b></div>
+        <div class="stat-row"><span>BMP-BLE fragments accepted</span><b id="stFrag">0</b></div>
+        <div class="stat-row"><span>generation in progress</span><b id="stGen">—</b></div>
+      </div>
+      <div id="result" class="mono-box hidden" style="margin-top:14px"></div>
+      <p class="dim" style="font-size:12px;margin-top:12px" id="bleNote"></p>
+    </div>
+
+    <div class="card">
+      <div class="label">NO RADIO? LOOPBACK DEMO</div>
+      <p>A virtual BMP-BLE beacon cycles the reference fragment set right here (with 35% simulated packet loss) through this page's real reassembler and verifier:</p>
+      <button class="btn ghost" id="loopBtn">Run loopback demo</button>
+      <div id="loopStats" class="hidden" style="margin-top:14px">
+        <div class="stat-row"><span>advertising cycles</span><b id="stCyc">0</b></div>
+        <div class="stat-row"><span>fragments received</span><b id="stLf">0</b></div>
+      </div>
+      <div id="loopResult" class="mono-box hidden" style="margin-top:14px"></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kick">TRY IT OVER REAL RADIO</div>
+    <h2>Transmit from a second phone.</h2>
+    <ol>
+      <li>On a <b>second Android phone</b>, install <b>nRF Connect</b> (free, Nordic Semiconductor).</li>
+      <li>Open the <b>Advertiser</b> tab → new advertiser → add <b>Manufacturer Specific Data</b>: company ID <b>0xFFFF</b>, data = one fragment hex below. Add all 9 as separate advertisers (chipset permitting) and enable them.</li>
+      <li>Start scanning on <b>this</b> page. When the set completes, the signed command appears above.</li>
+    </ol>
+    <p style="margin-top:10px">Reference fragment set (vector A, BMP-0001 §7) — company <b>0xFFFF</b>:</p>
+    <div class="mono-box" id="fragBox"></div>
+  </div>
+</section>
+
+<section style="border-bottom:none">
+  <div class="wrap">
+    <div class="kick">WHAT YOU JUST SAW</div>
+    <p><b>One-way broadcast, zero handshake.</b> The transmitter never learns who listened. The receiver never trusts the radio — it trusts the signature: the envelope is verified against the published test authority exactly as a robot would (BMP-0000 §4.3, L1: radio range is the physical-presence proof).</p>
+    <p>Spec: <a href="https://github.com/futureman19/sv-codes/blob/main/spec/BMP-0001-bmp-ble.md">BMP-0001 — BMP-BLE</a>. Reference codec: <a href="https://github.com/futureman19/sv-codes/blob/main/poc/svcode/ble.py">poc/svcode/ble.py</a> + this page's <a href="https://github.com/futureman19/sv-codes/blob/main/docs/js/ble.js">docs/js/ble.js</a> — two independent receivers, bit-identical results.</p>
+  </div>
+</section>
+
+<script src="../js/svc.js"></script>
+<script src="../js/ble.js"></script>
+<script src="../js/encoder.js"></script>
+<script>
+"use strict";
+/* Reference fragment set (poc/vectors/ble_vectors.json, vector A). */
+const VECTOR_FRAGS = ["535603000900000096bb499210015356433100ff00000000","5356030109000000006ac41cd8004101e4f0b102e94eb6ca","5356030209b7bc7890a322605b9dd7d947d7bfda200e607f","53560303091a6c360715daeef13280b7a461d17fe482591b","53560304096c854cdfc127e000b06987b2c3c9aeebd74845","53560305094c4c4f204f56455220424c5545544f4f54482e","5356030609205468697320636f6d6d616e64207472617665","53560307096c656420617320726164696f2c206e6f207061","53560308096972696e672e00000000000000000000000000"];
+const unhex = (h) => Uint8Array.from(h.match(/../g).map(x => parseInt(x, 16)));
+document.getElementById("fragBox").textContent = VECTOR_FRAGS.join("\n");
+
+function showResult(el, r){
+  const txt = new TextDecoder().decode(r.env.payload);
+  el.classList.remove("hidden");
+  el.innerHTML =
+    '<span class="sig ' + (r.sig === "valid" ? "okb" : "") + '">' +
+    (r.sig === "valid" ? "SIGNATURE VALID ✓" : r.sig.toUpperCase()) + "</span>\n\n" +
+    "action: 0x" + r.env.action.toString(16).padStart(4, "0") + "\n" +
+    "target: 0x" + r.env.targetId.toString(16).padStart(8, "0") + "\n" +
+    "payload: " + txt.replace(/</g, "&lt;");
+}
+function verifyStream(stream){
+  try {
+    const content = SVC.parseStream(stream);
+    const env = SVC.parseEnvelope(content);
+    const ok = SVC.ecdsaVerify(SVC.parsePubkey(SVEnc.GOLDEN_PUB_HEX), env.signature, SVC.envelopeDigest(content));
+    return { env, sig: ok ? "valid" : "invalid" };
+  } catch (e) { return null; }
+}
+
+/* ---------- real radio ---------- */
+const scanBtn = document.getElementById("scanBtn");
+const bleNote = document.getElementById("bleNote");
+let advCount = 0, fragCount = 0;
+const radio = new SVBLE.Reassembler();
+scanBtn.addEventListener("click", async () => {
+  if (!navigator.bluetooth || !navigator.bluetooth.requestLEScan){
+    bleNote.textContent = "Web Bluetooth scanning isn't available in this browser. Use Chrome on Android (or enable chrome://flags#enable-experimental-web-platform-features on desktop) — or run the loopback demo below.";
+    bleNote.className = "warn";
+    return;
+  }
+  try {
+    bleNote.textContent = "requesting scan permission…";
+    const scan = await navigator.bluetooth.requestLEScan({
+      acceptAllAdvertisements: true,
+      keepRepeatedDevices: true,
+      optionalManufacturerData: [SVBLE.COMPANY],
+    });
+    scanBtn.disabled = true; scanBtn.textContent = "Scanning…";
+    document.getElementById("scanStats").classList.remove("hidden");
+    bleNote.textContent = "scanning — point a BMP-BLE beacon at this device";
+    bleNote.className = "dim";
+    navigator.bluetooth.addEventListener("advertisementreceived", (ev) => {
+      const msd = ev.manufacturerData && ev.manufacturerData.get(SVBLE.COMPANY);
+      if (!msd) return;
+      advCount++;
+      document.getElementById("stAdv").textContent = advCount;
+      const bytes = new Uint8Array(msd.buffer, msd.byteOffset, msd.byteLength);
+      const got = radio.feed(bytes);
+      if (got !== null || radio._frags.size > 0){
+        if (radio._frags.size > 0) fragCount++;
+        document.getElementById("stFrag").textContent = fragCount;
+        document.getElementById("stGen").textContent =
+          "seq " + (radio._seq ?? "—") + " · " + radio._frags.size + "/" + (radio._count || "?") + " fragments";
+      }
+      if (got){
+        const r = verifyStream(got);
+        if (r) showResult(document.getElementById("result"), r);
+      }
+    });
+  } catch (e) {
+    bleNote.textContent = "scan failed: " + e.message;
+    bleNote.className = "err";
+  }
+});
+
+/* ---------- loopback demo ---------- */
+document.getElementById("loopBtn").addEventListener("click", function(){
+  this.disabled = true;
+  document.getElementById("loopStats").classList.remove("hidden");
+  const frags = VECTOR_FRAGS.map(unhex);
+  const rx = new SVBLE.Reassembler();
+  let cycle = 0, lf = 0;
+  const timer = setInterval(() => {
+    cycle++;
+    document.getElementById("stCyc").textContent = cycle;
+    const order = frags.slice().sort(() => Math.random() - 0.5);
+    let got = null;
+    for (const f of order){
+      if (Math.random() < 0.35) continue;      // simulated packet loss
+      lf++;
+      got = rx.feed(f) || got;
+    }
+    document.getElementById("stLf").textContent = lf;
+    if (got){
+      clearInterval(timer);
+      const r = verifyStream(got);
+      if (r) showResult(document.getElementById("loopResult"), r);
+    }
+  }, 500);
+});
+</script>
+</body>
+</html>

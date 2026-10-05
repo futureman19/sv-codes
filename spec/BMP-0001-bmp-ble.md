@@ -4,7 +4,7 @@
 |---|---|
 | **Number** | BMP-0001 |
 | **Title** | BMP-BLE — Bluetooth Low Energy Connectionless Transport |
-| **Status** | **Draft** (graduates to *Stable* when a second independent receiver passes the reference tests) |
+| **Status** | **Stable** (two independent receivers — Python `poc/svcode/ble.py` and browser JS `docs/js/ble.js` — emit bit-identical fragments and pass the reference vectors in `poc/vectors/ble_vectors.json`) |
 | **Category** | Transport Specification (Bitcoin Machine Protocol) |
 | **Created** | 2026-10-05 |
 | **Requires** | BMP-0000 |
@@ -122,7 +122,7 @@ The PoC (`poc/svcode/ble.py`) implements §3–§5 exactly and is exercised by `
 - Exact on-air byte layout of §3.2 (pack + parse a full 31-byte legacy PDU).
 - End-to-end: envelope → sign → stream → fragment → loss/shuffle cycles → reassemble → CRC32 → parse → signature verify.
 
-This spec remains **Draft** until a second independent receiver (planned: a Web Bluetooth scanning page) passes the same vectors.
+This spec is **Stable** as of 2026-10-05: the JS receiver (`docs/js/ble.js`, driving the Web Bluetooth demo at `docs/ble/`) passes all of the above against the Python-generated vectors, with byte-identical fragment output.
 
 ## 8. References
 
