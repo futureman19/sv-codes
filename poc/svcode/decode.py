@@ -18,12 +18,12 @@ WARP_SCALE = 10  # canonical image is 640x640 (10 px per cell)
 
 # §2.1 HSV ranges, OpenCV hue scale 0-179, S/V in 0-255 (>=80% -> >=204)
 ANCHOR_HSV = {
-    "tl": [(np.array([85, 204, 204]), np.array([95, 255, 255]))],
-    "tr": [(np.array([145, 204, 204]), np.array([155, 255, 255]))],
-    "bl": [(np.array([25, 204, 204]), np.array([35, 255, 255]))],
+    "tl": [(np.array([75, 204, 204]), np.array([105, 255, 255]))],
+    "tr": [(np.array([135, 204, 204]), np.array([165, 255, 255]))],
+    "bl": [(np.array([20, 204, 204]), np.array([40, 255, 255]))],
     "br": [
-        (np.array([0, 204, 204]), np.array([5, 255, 255])),
-        (np.array([175, 204, 204]), np.array([179, 255, 255])),
+        (np.array([0, 204, 204]), np.array([8, 255, 255])),
+        (np.array([172, 204, 204]), np.array([179, 255, 255])),
     ],
 }
 

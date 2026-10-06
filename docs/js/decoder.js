@@ -18,10 +18,10 @@ function classify(r, g, b){
   else if (max === g) h = 30 * ((b - r) / d + 2);
   else                h = 30 * ((r - g) / d + 4);
   if (h < 0) h += 180;
-  if (h >= 85 && h <= 95)  return 0;           // TL cyan
-  if (h >= 145 && h <= 155) return 1;          // TR magenta
-  if (h >= 25 && h <= 35)  return 2;           // BL yellow
-  if (h <= 5 || h >= 175)  return 3;           // BR red
+  if (h >= 75 && h <= 105)  return 0;          // TL cyan (liberal: survives night-light shift)
+  if (h >= 135 && h <= 165) return 1;          // TR magenta
+  if (h >= 20 && h <= 40)   return 2;          // BL yellow
+  if (h <= 8 || h >= 172)   return 3;          // BR red
   return -1;
 }
 
