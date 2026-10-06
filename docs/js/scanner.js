@@ -105,6 +105,46 @@ function boot(){
     setTimeout(loop, 100);
   }
 
+  let itemSeq = 0;
+  function itemCard(cert, sigBadge){
+    const title = (cert.item || "unknown-item").replace(/-/g, " ")
+      .replace(/\b\w/g, c => c.toUpperCase());
+    const mintShort = /^0{64}$/.test(cert.mint || "") ? "pre-mint (not yet anchored)"
+      : (cert.mint || "").slice(0, 12) + "…" + (cert.n ? ":" + cert.n : "");
+    const traits = Object.entries(cert.tr || {})
+      .map(([k, v]) => `<span class="trait">${escapeHtml(k)} · <b>${escapeHtml(String(v))}</b></span>`).join("");
+    const cid = "itemReveal" + (++itemSeq);
+    const html = `
+      <div class="item-card">
+        <div class="item-head">
+          <div>
+            <div class="item-name">${escapeHtml(title)}</div>
+            <div class="item-sub">${escapeHtml(cert.col)} · edition ${cert.ed} of ${cert.of}</div>
+          </div>
+          ${sigBadge}
+        </div>
+        <canvas id="${cid}" width="512" height="512" class="item-canvas"></canvas>
+        <div class="traits">${traits}</div>
+        <div class="res-row"><span>MINT</span><b>${escapeHtml(mintShort)}</b></div>
+        <div class="res-row"><span>ART</span><b>${escapeHtml(cert.art || "?")}</b></div>
+        <div class="res-row"><span>SEED</span><b>${escapeHtml(cert.seed || "?")}</b></div>
+      </div>`;
+    if (html !== lastReport){ card.innerHTML = html; lastReport = html; }
+    card.style.display = "block";
+    card.classList.remove("bad");
+    const cv = document.getElementById(cid);
+    if (cv && window.SVReveal){
+      const p = SVReveal.render(cv, cert.item, cert.seed);
+      if (!p){
+        const ctx = cv.getContext("2d");
+        ctx.fillStyle = "#0e1220"; ctx.fillRect(0, 0, cv.width, cv.height);
+        ctx.fillStyle = "#9aa3b8"; ctx.font = "20px system-ui"; ctx.textAlign = "center";
+        ctx.fillText("no renderer registered", cv.width/2, cv.height/2 - 12);
+        ctx.fillText("for item '" + cert.item + "'", cv.width/2, cv.height/2 + 14);
+      }
+    }
+  }
+
   function showResult(res){
     const env = res.env;
     const name = ACTION_NAMES[env.action] || ("0x" + env.action.toString(16).padStart(4, "0"));
@@ -115,6 +155,12 @@ function boot(){
       : res.sig === "demo" ? '<span class="sig demo">DEMO (zeroed sig)</span>'
       : res.sig === "invalid" ? '<span class="sig bad">INVALID ✗ unknown issuer</span>'
       : '<span class="sig demo">unverified</span>';
+    if (env.action === 0xA47C){
+      try {
+        const cert = JSON.parse(payload);
+        if (cert && cert.col && cert.item && cert.seed){ itemCard(cert, sigBadge); return; }
+      } catch (e) { /* not a collection cert — fall through */ }
+    }
     const html = `
       <div class="res-row"><span>ACTION</span><b>${name} (0x${env.action.toString(16).padStart(4,"0")})</b></div>
       <div class="res-row"><span>TARGET</span><b>0x${env.targetId.toString(16).padStart(8,"0")}</b></div>

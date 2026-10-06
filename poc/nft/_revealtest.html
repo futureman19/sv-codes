@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>reveal test</title>
+<style>body{background:#070912;color:#e8eaf2;font:14px system-ui;display:flex;gap:24px;padding:24px}
+figure{margin:0}figcaption{margin-top:6px;color:#9aa3b8}canvas,img{width:340px;border:1px solid #1a2033;border-radius:6px}</style>
+</head><body>
+<figure><canvas id="js" width="512" height="512"></canvas><figcaption>JS render (browser)</figcaption></figure>
+<figure><img src="genesis-001-reveal.png" alt=""><figcaption>Python canonical (art hash 2985a151265ec200)</figcaption></figure>
+<script src="/docs/js/svc.js"></script>
+<script src="/docs/js/reveal.js"></script>
+<script>
+const p = SVReveal.render(document.getElementById("js"), "genesis-blade", "a91f3c");
+document.querySelector("figcaption").textContent =
+  "JS render: " + [p.form, p.edge, p.core, p.guard].join(" / ") +
+  " len " + p.length.toFixed(3) + " glow " + p.glow.toFixed(3);
+</script>
+</body></html>

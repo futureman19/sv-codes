@@ -4,11 +4,11 @@
       image in a cache, redirect to /?shared; the page picks it up. */
 "use strict";
 
-const SHELL = "sv-shell-v1";
+const SHELL = "sv-shell-v2";
 const SHARE = "sv-share-v1";
 const CORE = [
   "/", "/index.html",
-  "/js/svc.js", "/js/decoder.js", "/js/scanner.js",
+  "/js/svc.js", "/js/decoder.js", "/js/scanner.js", "/js/reveal.js",
   "/js/encoder.js", "/js/spv.js", "/js/anchor.js", "/js/miniwallet.js",
   "/manifest.webmanifest",
   "/icons/icon-192.png", "/icons/icon-512.png",
