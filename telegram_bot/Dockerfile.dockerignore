@@ -1,0 +1,15 @@
+**
+!telegram_bot/
+telegram_bot/**
+!telegram_bot/__init__.py
+!telegram_bot/__main__.py
+!telegram_bot/decoder.py
+!telegram_bot/reveal.py
+!telegram_bot/service.py
+!telegram_bot/requirements.txt
+!telegram_bot/Dockerfile
+!poc/
+poc/**
+!poc/svcode/
+poc/svcode/**
+!poc/svcode/*.py
