@@ -3,7 +3,7 @@
 The seal shrinks to hanko scale: a small SV sticker on the rooftop parapet,
 bottom-right — the artist's seal in the corner of the print. Measured floor
 for the digital pipeline: 1px cells (128px on a 1024 canvas) still decode
-through JPEG q60; this piece ships at 2px cells (256px) for phone comfort.
+through JPEG q60; this piece ships at the floor: 1px cells (128px on 1024), bare, bottom-right.
 
 Self-check: PNG + JPEG-q80 decode (sig VALID, cert byte-exact) + LSB shard 2.
 Run:  python make_nft_night_rooftop.py
@@ -25,10 +25,9 @@ from svcode.render import render_frame
 from svcode.decode import decode_file
 
 BASE = 512
-SEAL_SCALE = 2                       # px per cell, base canvas (=> 4px final)
-SEAL = 64 * SEAL_SCALE               # 128
-PLATE = SEAL + 16                    # inkstone plate behind the sticker
-PX, PY = BASE - PLATE - 10, BASE - PLATE - 10   # plate origin (bottom-right)
+SEAL_SCALE = 1                       # 1px cells = the measured decode floor
+SEAL = 64 * SEAL_SCALE               # 64px base / 128px final — bare, no plate
+SX, SY = BASE - SEAL - 10, BASE - SEAL - 10   # bottom-right, 20px final inset
 
 NAVY_TOP = (8, 10, 26)
 STEEL_BOT = (44, 52, 76)
@@ -192,7 +191,14 @@ def main() -> None:
     enc = Encoder(e.serialize())
     assert enc.static, "must fit one static frame"
     _, bits = enc.frame_bits(0)
-    seal = render_frame(bits, scale=SEAL_SCALE).convert("RGBA")  # 128x128
+    seal = render_frame(bits, scale=SEAL_SCALE).convert("RGBA")  # 64x64
+    # soften pure white to warm paper — same luminance headroom, less stark
+    px = seal.load()
+    for yy in range(seal.height):
+        for xx in range(seal.width):
+            r, g, b, a = px[xx, yy]
+            if (r, g, b) == (255, 255, 255):
+                px[xx, yy] = (242, 234, 216, a)
 
     # vignette + grain FIRST (seal stays pristine)
     art = base.convert("RGBA")
@@ -210,11 +216,9 @@ def main() -> None:
         gd.point((x, y), fill=(v, v, v, rng.randint(4, 10)))
     art = Image.alpha_composite(art, gr)
 
-    # inkstone plate + the sticker seal, pasted last, bottom-right
-    d = ImageDraw.Draw(art)
-    d.rounded_rectangle([PX, PY, PX + PLATE, PY + PLATE], radius=6,
-                        fill=(12, 12, 18, 240), outline=(40, 42, 58, 255))
-    art.paste(seal, (PX + 8, PY + 8))
+    # the bare seal, pasted last — no plate, no frame: the white quiet zone
+    # of the matrix IS the margin, like paper around a signature
+    art.paste(seal, (SX, SY))
     art = art.convert("RGB")
 
     art_up = art.resize((BASE * 2, BASE * 2), Image.NEAREST)

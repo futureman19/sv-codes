@@ -37,7 +37,7 @@ function findAnchors(data, width, height){
       if (cls >= 0){ cnt[cls]++; sumX[cls] += x; sumY[cls] += y; }
     }
   }
-  const minArea = Math.max(25, (width * height) / (step * step) * 0.0002);
+  const minArea = Math.max(12, (width * height) / (step * step) * 0.00005);
   const out = [];
   for (let c = 0; c < 4; c++){
     if (cnt[c] < minArea) return null;

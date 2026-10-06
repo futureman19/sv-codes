@@ -55,7 +55,7 @@
 <main>
   <div class="tag">SEALED ARTWORK · PROOF OF CONCEPT · NIGHT DISTRICTS · DIEGETIC TIER III</div>
   <h1>The seal shrinks to a signature. The art takes the canvas back.</h1>
-  <p class="sub">Piece #12 wore its certificate as a billboard. #13 wove it into a facade. #14 stamps it in the corner like a <em>hanko</em> — the seal a printmaker presses onto a finished work. Two figures on a rooftop, fog rolling through the district, and in the distance: the amber grid of Facade #13. The certificate is 6% of the canvas and carries everything.</p>
+  <p class="sub">Piece #12 wore its certificate as a billboard. #13 wove it into a facade. #14 stamps it in the corner like a <em>hanko</em> — the seal a printmaker presses onto a finished work. Two figures on a rooftop, fog rolling through the district, and in the distance: the amber grid of Facade #13. The certificate is 1.5% of the canvas — a bare 128px mark, no plate, no frame — and it carries everything. This is the reference for the Sealed Signature standard.</p>
 
   <div class="hero">
     <img src="../night-districts-14.png" alt="Night Districts #14 — Rooftop">
@@ -88,11 +88,17 @@
     <p class="sub" style="margin:0 0 6px">We rendered the same signed certificate at shrinking cell sizes and ran the full decode chain (anchors → fountain solve → envelope → ECDSA) after real-world abuse: noisy backgrounds, JPEG recompression at quality 80/70/60.</p>
     <table>
       <tr><th>Seal size (on a 1024px image)</th><th>Cell pitch</th><th>PNG</th><th>JPEG q80</th><th>JPEG q60</th></tr>
-      <tr><td><b>128 × 128 px</b> — 1.5% of canvas</td><td>2 px</td><td>VALID</td><td>VALID</td><td>VALID</td></tr>
-      <tr><td><b>256 × 256 px</b> — this piece</td><td>4 px</td><td>VALID</td><td>VALID</td><td>VALID</td></tr>
+      <tr><td><b>128 × 128 px</b> — this piece, 1.5% of canvas</td><td>2 px</td><td>VALID</td><td>VALID</td><td>VALID</td></tr>
+      <tr><td><b>256 × 256 px</b></td><td>4 px</td><td>VALID</td><td>VALID</td><td>VALID</td></tr>
       <tr><td><b>384 × 384 px</b></td><td>6 px</td><td>VALID</td><td>VALID</td><td>VALID</td></tr>
     </table>
-    <p class="sub" style="margin-top:10px">The digital floor is <b>128px</b> — a postage stamp. We ship at 256px so a phone can also scan it off a screen. For physical print, the floor is set by the camera, not the file: the sticker campaign prints at ~300&nbsp;px/inch.</p>
+    <p class="sub" style="margin-top:10px">The floor is <b>128px</b> for both decoders — a postage stamp. (Shipping this size surfaced a real bug: the site's JS scanner sampled every 2nd pixel with a conservative area floor and missed 128px seals entirely. Fixed and regression-tested — all four series pieces still pass, 10/10 decoder suite.) For physical print, the floor is set by the camera, not the file: the sticker campaign prints at ~300&nbsp;px/inch.</p>
+
+    <h2 style="margin-top:28px">The Sealed Signature — standard</h2>
+    <div class="cols" style="grid-template-columns:1fr 1fr">
+      <div class="card"><h3>Placement</h3><p>Bare seal, bottom-right corner, 20px inset. No plate, no frame — the seal's own light margin is the border, like paper around a signature. Pasted <b>last</b>, after all vignette/grain: nothing ever draws over a cell.</p></div>
+      <div class="card"><h3>Rules</h3><p>128–256px on a 1024 canvas (1.5–6%). Light cells may be softened to warm paper — never darkened. The scene carries zero pure cyan/magenta/yellow/red: those four hues belong to the seal's corner anchors alone. Verify PNG + JPEG q80 before publishing.</p></div>
+    </div>
   </section>
 
   <section>
