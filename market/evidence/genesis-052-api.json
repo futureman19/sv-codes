@@ -1,0 +1,61 @@
+{
+  "schema": "sv2-api-origin-evidence-1",
+  "scope": "API-attested WoC mainnet, locally verified certificate and raw tx hashes; NOT independent SPV",
+  "observedAt": "2026-10-06T22:13:30.237Z",
+  "origin": "f8200f6f3573ba4e19fa8f94727fa6d76ca89b587dcaec0b67190efe745cbaa9:0",
+  "certificate": {
+    "verified": true,
+    "issuer": "GEN1",
+    "demoIssuer": true,
+    "edition": 52,
+    "origin": "f8200f6f3573ba4e19fa8f94727fa6d76ca89b587dcaec0b67190efe745cbaa9:0",
+    "commitment": "a61b5c26f824691bc38054800dd85a28a57e30eab4bd3052392e1cf0991c36b5",
+    "signature": "ECDSA-secp256k1-low-S",
+    "paidTradingEnabled": false
+  },
+  "current": {
+    "availabilityProven": true,
+    "outpoint": "f8200f6f3573ba4e19fa8f94727fa6d76ca89b587dcaec0b67190efe745cbaa9:0",
+    "satOffset": "0",
+    "satoshis": 1,
+    "controllingScript": "76a914a282ffcb5f0632d3e19b90d06adf719c3b89f79b88ac",
+    "controllingAddress": "1FpHQ4VrLYGp1sLDNXs5Cxh3x8KE4opYgU",
+    "keyPossessionProven": false,
+    "status": {
+      "outpoint": "f8200f6f3573ba4e19fa8f94727fa6d76ca89b587dcaec0b67190efe745cbaa9:0",
+      "checkedAt": 1791324808567,
+      "confirmed": "unspent",
+      "mempool": "unspent",
+      "scope": "API-attested; not SPV",
+      "address": "1FpHQ4VrLYGp1sLDNXs5Cxh3x8KE4opYgU",
+      "scriptHash": "6ecb1619cc9f5398afacb27fd674150f7e1ea6e28ad06d70abfa794fae6b2fe2"
+    }
+  },
+  "hops": [],
+  "transactions": [
+    {
+      "raw": "010000000135bf3737d9240a2e5035413404bf7bdd852cc7cfc832bd2c56442a66c65cae9e000000006b483045022100cdbde17f69b4f1bd232073b2417b9ba778511efe9f29309aec2e07e527517cad02207091268531cb842e907612e4cc50a68d7cc9ca099bb6f66f5a0a7ffc5efff38441210330e0a5be5e5d025bc208168acff433ab6ee34d4bef795b4ed3ad2d7efa61ab09ffffffff0301000000000000001976a914a282ffcb5f0632d3e19b90d06adf719c3b89f79b88ac000000000000000026006a23535632a61b5c26f824691bc38054800dd85a28a57e30eab4bd3052392e1cf0991c36b523c20000000000001976a914758970d934ed6b44492045a2d123fb11c455132f88ac00000000",
+      "txid": "f8200f6f3573ba4e19fa8f94727fa6d76ca89b587dcaec0b67190efe745cbaa9",
+      "confirmations": 20,
+      "blockheight": 969927,
+      "blockhash": "00000000000000000e81c029e42faede55e1b3ec729813888331be22a0856826"
+    },
+    {
+      "raw": "0100000001bc8c1d9a014385bcec886c32ce1af3110fc57199a75d46967278aff734175def010000006b483045022100f343dfacbaf767a3faa7377a9d33e1647a233a5692a945cbc3f0db373028a74b022034456969b7a31a88d8320c6a25dd308fcdc6772be54addf06da52a3d27a0cabd41210309773298cb9672c46fbadf6379c14ceab73607b87575dca9439d1946df95e0ffffffffff0250c30000000000001976a914758970d934ed6b44492045a2d123fb11c455132f88ac2f7a4700000000001976a914a282ffcb5f0632d3e19b90d06adf719c3b89f79b88ac00000000",
+      "txid": "9eae5cc6662a44562cbd32c8cfc72c85dd7bbf04344135502e0a24d93737bf35",
+      "confirmations": 21,
+      "blockheight": 969926,
+      "blockhash": "0000000000000000169fb9b5dec5879eb60e5dd4206b67a9a1dd0f93abc59d29"
+    }
+  ],
+  "paidTradingEnabled": false,
+  "missingProofGates": [
+    "independent-SPV-and-reorg-policy",
+    "production-private-issuer",
+    "real-Yours-key-possession-and-capabilities",
+    "trusted-wallet-asset-free-funding-provenance",
+    "durable-reservations",
+    "separately-approved-funded-trade"
+  ],
+  "requests": 11
+}

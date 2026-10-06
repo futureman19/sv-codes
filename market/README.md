@@ -53,7 +53,7 @@ No signAction/createSignature/cancel wallet signer/broadcast methods. Funding si
 
 Application code must provide `verifyOrigin({origin,raw})`, `verifyTransaction({txid,raw})`, `verifyFunding({outpoint,raw})` returning exactly true only after independent certificate/anchor, chain proof, or authorized asset-excluding funding checks respectively. `status(outpoint)` must return `{outpoint,confirmed:'unspent',mempool:'unspent',checkedAt:Date.now()}`. Unknown/spent/not-found/stale (>15s)/future/mismatched results fail closed. Historical consumed lineage funding is classified, not required currently unspent. Listing and purchase funding are fresh-checked; races remain after checks.
 
-These are contracts, not implementations. Tests use labeled synthetic replacements. Hashes/BEEF prove byte consistency, not confirmation or availability. A production readonly evidence client is deferred; no broad SPV claim.
+`live-evidence.mjs` now implements a bounded **API-attested, not SPV** read-only provider and real GEN1 certificate/anchor verification; see [LIVE-EVIDENCE.md](LIVE-EVIDENCE.md). The live CLI never calls the CWI adapter. Demo GEN1 deliberately returns false from the paid-listing `verifyOrigin` callback even when its display certificate is valid. Funding remains false without a separately trusted wallet-approved asset-free provenance set. Synthetic tests remain labeled; hashes/BEEF alone do not establish confirmation or availability.
 
 Tests cover term/script mutation, front amount, receive/order, extra assets/funding, asset-to-payout/fee, exact fee drift, unknown state, wrong cancel key and CWI returned-layout rejection. Independent published-fixture replay imports no key generator and repeats hashing, parsing, flow and all-input interpretation.
 
