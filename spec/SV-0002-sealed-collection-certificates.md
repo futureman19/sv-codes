@@ -4,7 +4,7 @@
 |---|---|
 | **Number** | SV-0002 |
 | **Title** | Sealed Collection Certificates — Visual Collectibles with On-Chain Ownership |
-| **Status** | **Draft** (graduates to Stable when a second independent implementation passes §8 test vectors AND one real mint exists on-chain) |
+| **Status** | **Draft** (graduates to Stable when a second independent implementation passes §9 test vectors AND one real mint exists on-chain) |
 | **Category** | Application Specification (Bitcoin Machine Protocol) |
 | **Created** | 2026-10-06 |
 | **Requires** | SV-0001 (visual matrix), BMP-0000 ([bmp repo](https://github.com/futureman19/bmp)) |
