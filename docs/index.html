@@ -243,6 +243,12 @@ This text is wrapped in a signed BMP envelope, framed with CRC32, and fountain-s
         <span class="hint" id="scanStatus">camera off — everything runs locally in this page</span>
         <div id="scanResult" class="scan-result" style="display:none"></div>
         <p class="hint" style="margin-top:16px">Open this page on your phone, start the camera, and point it at a grid — the transmitter above on your laptop screen, or a printed static frame. The full SV-0001 §6 pipeline runs in your browser: color masks → homography → fountain solve → CRC32 → secp256k1 verify. No server, no upload.</p>
+        <p class="hint" style="margin-top:10px"><b>Scrolling instead?</b> Screenshot the code and drop it here — no camera needed:</p>
+        <div style="margin-top:8px">
+          <input type="file" id="imgPick" accept="image/*" style="display:none">
+          <button class="btn" id="imgPickBtn">Decode a screenshot</button>
+          <span class="hint" id="imgPickStatus" style="margin-left:10px"></span>
+        </div>
       </div>
     </div>
   </div>

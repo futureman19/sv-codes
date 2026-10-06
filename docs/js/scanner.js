@@ -124,6 +124,45 @@ function boot(){
     card.style.display = "block";
     if (res.sig === "invalid") card.classList.add("bad"); else card.classList.remove("bad");
   }
+
+  /* screenshot / file decode: no camera needed — same pipeline, one image */
+  const pick = document.getElementById("imgPick");
+  const pickBtn = document.getElementById("imgPickBtn");
+  const pickStatus = document.getElementById("imgPickStatus");
+  function decodeImageFile(file){
+    if (!file) return;
+    pickStatus.textContent = "reading…";
+    const url = URL.createObjectURL(file);
+    const im = new Image();
+    im.onload = () => {
+      const scale = Math.min(1, 1600 / Math.max(im.width, im.height));
+      canvas.width = Math.round(im.width * scale);
+      canvas.height = Math.round(im.height * scale);
+      ctx.drawImage(im, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+      const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const bits = D.decodeImageData(img.data, img.width, img.height);
+      if (!bits){ pickStatus.textContent = "no SV Code found in that image"; return; }
+      const sc = new D.StreamScanner(Object.keys(ISSUERS));   // fresh: file decode is one-shot
+      const res = sc.feedBits(bits);
+      if (!res){ pickStatus.textContent = "grid read but stream incomplete — try a sharper shot"; return; }
+      pickStatus.textContent = "decoded ✓";
+      showResult(res);
+      card.scrollIntoView({behavior: "smooth", block: "nearest"});
+    };
+    im.onerror = () => { pickStatus.textContent = "could not read that file"; };
+    im.src = url;
+  }
+  if (pickBtn){
+    pickBtn.addEventListener("click", () => pick.click());
+    pick.addEventListener("change", () => decodeImageFile(pick.files[0]));
+    const zone = document.querySelector(".scan-box");
+    zone.addEventListener("dragover", e => { e.preventDefault(); });
+    zone.addEventListener("drop", e => {
+      e.preventDefault();
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) decodeImageFile(e.dataTransfer.files[0]);
+    });
+  }
   function escapeHtml(s){ return s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 }
 document.addEventListener("DOMContentLoaded", boot);
