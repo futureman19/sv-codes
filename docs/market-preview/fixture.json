@@ -1,0 +1,187 @@
+{
+  "schema": "sv0004-offline-v2-sale-1",
+  "mode": "offline-v2",
+  "label": "SYNTHETIC OFFLINE OrdLockV2 interpreter proof — NOT a chain receipt. NEVER fund these disposable addresses.",
+  "supportedV2": true,
+  "paidTradingEnabled": false,
+  "liveChainAvailable": false,
+  "realWalletTested": false,
+  "terms": {
+    "origin": "b1663b4dfb8ed39110a575917245689bede88f3b57f95977bff28229d1ba29d2:1",
+    "current": "b1663b4dfb8ed39110a575917245689bede88f3b57f95977bff28229d1ba29d2:1",
+    "price": 1234,
+    "cancelAddress": "195AHZucrNpvooLiMfnPDLy5WcJP5VdBNz",
+    "payoutAddress": "1MQhJtsDim4UQGuDLRpfoLZwFLkD8SLWAV",
+    "listing": "2ab1fe61681122d3d2fb276b65a2595f1973ac5a3295e24299534c61acaa9eac:2"
+  },
+  "buyerScript": "76a914cf537da9234333e50168cdbb3cbea6b21d09ffe788ac",
+  "options": {
+    "frontOutpoint": "b1663b4dfb8ed39110a575917245689bede88f3b57f95977bff28229d1ba29d2:2",
+    "feeOutpoint": "b1663b4dfb8ed39110a575917245689bede88f3b57f95977bff28229d1ba29d2:3",
+    "buyerScript": "76a914cf537da9234333e50168cdbb3cbea6b21d09ffe788ac",
+    "changeScript": "76a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac",
+    "expectedFee": 200,
+    "maxFee": 200
+  },
+  "origin": {
+    "txid": "b1663b4dfb8ed39110a575917245689bede88f3b57f95977bff28229d1ba29d2",
+    "rawHex": "01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff03020402ffffffff05d0070000000000001976a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac01000000000000001976a9147670c557bb009dc3b578300043fdd2997731cf8d88ac88130000000000001976a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88acf4010000000000001976a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88acb80b0000000000001976a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac00000000",
+    "interpreterInputs": [],
+    "outputs": [
+      {
+        "index": 0,
+        "satoshis": 2000,
+        "lockingScript": "76a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac"
+      },
+      {
+        "index": 1,
+        "satoshis": 1,
+        "lockingScript": "76a9147670c557bb009dc3b578300043fdd2997731cf8d88ac"
+      },
+      {
+        "index": 2,
+        "satoshis": 5000,
+        "lockingScript": "76a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac"
+      },
+      {
+        "index": 3,
+        "satoshis": 500,
+        "lockingScript": "76a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac"
+      },
+      {
+        "index": 4,
+        "satoshis": 3000,
+        "lockingScript": "76a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac"
+      }
+    ]
+  },
+  "sources": [],
+  "listing": {
+    "txid": "2ab1fe61681122d3d2fb276b65a2595f1973ac5a3295e24299534c61acaa9eac",
+    "rawHex": "0100000002d229bad12982f2bf7759f9573b8fe8ed9b6845729175a51091d38efb4d3b66b1000000006a4730440220068134c8b3c67e6aa42a464b3d8705bb3b9cf045d25cf2a8c760c88e052e1bd90220689d72c2c8380f09918dde48b05df0744c81d3ed6ffbc55dd4bd4ef47db64cd3412103f2e1d3fbed09eac3b86aeddfb885ae0da1f869edd510306eb930da84d1c424feffffffffd229bad12982f2bf7759f9573b8fe8ed9b6845729175a51091d38efb4d3b66b1010000006b483045022100eeb7890bc2cce4d7e93caa0988791a4b1c8d8c7837f6ee35ef0690c77797bb3d022029cc60b0c5fa6488d1643c99e776365f842be02105431aaaa3063f81da0461114121023f225414fdff4588207971b2cee910a2c7edfe7ea8d88a6aaf9cd3474837cdfaffffffff03d0070000000000001976a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac00000000000000001976a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac0100000000000000fd0e0276009c637576ab76aa517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e01007e8100011f80517e9321414136d08c5ed2bf3ba048afe6dcaebafeffffffffffffffffffffffffffffff007d97785296789f527952798d9495937776927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e827c7e23022079be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798027c7e827c7e01307c7e01c37e2102b405d7f0322a89d0f9f3a98e6f938fdc1c969a8d1382a2bf66a71ae74a1e83b0ad6922d2040000000000001976a914dfddbb0c42df6c4fd6e87a11eb13dd8e7b48831d88acaa7c820128947f7701207f758767519d7b0a6f6c323a63616e63656c8876a914588a6bdfbed79d0f53b486111acb93334dc84a9f88ac6800000000",
+    "interpreterInputs": [
+      {
+        "index": 0,
+        "valid": true
+      },
+      {
+        "index": 1,
+        "valid": true
+      }
+    ],
+    "outputs": [
+      {
+        "index": 0,
+        "satoshis": 2000,
+        "lockingScript": "76a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac"
+      },
+      {
+        "index": 1,
+        "satoshis": 0,
+        "lockingScript": "76a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac"
+      },
+      {
+        "index": 2,
+        "satoshis": 1,
+        "lockingScript": "76009c637576ab76aa517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e01007e8100011f80517e9321414136d08c5ed2bf3ba048afe6dcaebafeffffffffffffffffffffffffffffff007d97785296789f527952798d9495937776927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e827c7e23022079be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798027c7e827c7e01307c7e01c37e2102b405d7f0322a89d0f9f3a98e6f938fdc1c969a8d1382a2bf66a71ae74a1e83b0ad6922d2040000000000001976a914dfddbb0c42df6c4fd6e87a11eb13dd8e7b48831d88acaa7c820128947f7701207f758767519d7b0a6f6c323a63616e63656c8876a914588a6bdfbed79d0f53b486111acb93334dc84a9f88ac68"
+      }
+    ]
+  },
+  "purchase": {
+    "txid": "aa545b221fa2f9bcb47ea97445d3712b96e5c1d5419a192aa9c025188a76e5bd",
+    "rawHex": "0100000003d229bad12982f2bf7759f9573b8fe8ed9b6845729175a51091d38efb4d3b66b1020000006b483045022100d7ebb20e6a8515b8ca0b090ec6b820943b880aaf955f3d3605d25181ad3daeb102202e9ddaeab37022e2542a5b1ac01e5de3bf58bc48c0bf798ae198a12095e3944b412103f2e1d3fbed09eac3b86aeddfb885ae0da1f869edd510306eb930da84d1c424feffffffffac9eaaac614c539942e295325aac73195f59a2656b27fbd2d322116861feb12a02000000fdaa024da6020100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ac9eaaac614c539942e295325aac73195f59a2656b27fbd2d322116861feb12a02000000fd070276aa517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f517f7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e01007e8100011f80517e9321414136d08c5ed2bf3ba048afe6dcaebafeffffffffffffffffffffffffffffff007d97785296789f527952798d9495937776927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f76927f7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e7c7e827c7e23022079be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798027c7e827c7e01307c7e01c37e2102b405d7f0322a89d0f9f3a98e6f938fdc1c969a8d1382a2bf66a71ae74a1e83b0ad6922d2040000000000001976a914dfddbb0c42df6c4fd6e87a11eb13dd8e7b48831d88acaa7c820128947f7701207f758767519d7b0a6f6c323a63616e63656c8876a914588a6bdfbed79d0f53b486111acb93334dc84a9f88ac680100000000000000ffffffff3be2b1daa42f07f8bd90c50c07bcf8ca7b53a3ccf625f339ce94d9e763ec2ba200000000c300000000ffffffffd229bad12982f2bf7759f9573b8fe8ed9b6845729175a51091d38efb4d3b66b1030000006b48304502210085b07c7ea20e35c27e940c949c611f0033409258b547487312868955838ab4b302200a7a41615e2619c3ee2389c3228c84766def672867c42d345e461bc26b9aa62e412103f2e1d3fbed09eac3b86aeddfb885ae0da1f869edd510306eb930da84d1c424feffffffff04b60e0000000000001976a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88acd2040000000000001976a914dfddbb0c42df6c4fd6e87a11eb13dd8e7b48831d88ac01000000000000001976a914cf537da9234333e50168cdbb3cbea6b21d09ffe788ac2c010000000000001976a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac00000000",
+    "interpreterInputs": [
+      {
+        "index": 0,
+        "valid": true
+      },
+      {
+        "index": 1,
+        "valid": true
+      },
+      {
+        "index": 2,
+        "valid": true
+      }
+    ],
+    "outputs": [
+      {
+        "index": 0,
+        "satoshis": 3766,
+        "lockingScript": "76a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac"
+      },
+      {
+        "index": 1,
+        "satoshis": 1234,
+        "lockingScript": "76a914dfddbb0c42df6c4fd6e87a11eb13dd8e7b48831d88ac"
+      },
+      {
+        "index": 2,
+        "satoshis": 1,
+        "lockingScript": "76a914cf537da9234333e50168cdbb3cbea6b21d09ffe788ac"
+      },
+      {
+        "index": 3,
+        "satoshis": 300,
+        "lockingScript": "76a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac"
+      }
+    ]
+  },
+  "cancel": {
+    "txid": "f71733f8bd36ba9482546efc9e0b45eac3b630e895133c8999902636e4d15824",
+    "rawHex": "0100000002ac9eaaac614c539942e295325aac73195f59a2656b27fbd2d322116861feb12a02000000770a6f6c323a63616e63656c483045022100c5d3942f8c46add687a442f9b811bc201b7becd48a2062c4a2033a25bbe58015022046af28fac81b60b2be5d00698a0c8fe29c3e29c9bcd53deeab807850eddd47b741210255c7b5d2e24eae810af647b85c50d7282c237e91da1efdeb36ac4a51fd30108c51ffffffffd229bad12982f2bf7759f9573b8fe8ed9b6845729175a51091d38efb4d3b66b1030000006a4730440220083a3deea885f228c11d459151805536829507111086aeec9952719715d1cb2802204acd2b6766c75509244362c55b080960e885d8df88edd49b3328159a291a5548412103f2e1d3fbed09eac3b86aeddfb885ae0da1f869edd510306eb930da84d1c424feffffffff0201000000000000001976a9147670c557bb009dc3b578300043fdd2997731cf8d88ac2c010000000000001976a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac00000000",
+    "interpreterInputs": [
+      {
+        "index": 0,
+        "valid": true
+      },
+      {
+        "index": 1,
+        "valid": true
+      }
+    ],
+    "outputs": [
+      {
+        "index": 0,
+        "satoshis": 1,
+        "lockingScript": "76a9147670c557bb009dc3b578300043fdd2997731cf8d88ac"
+      },
+      {
+        "index": 1,
+        "satoshis": 300,
+        "lockingScript": "76a9146b9e141fd0ada3bf8b1c8f61c8c5bd3d6a0a75da88ac"
+      }
+    ]
+  },
+  "satFlow": {
+    "listing": {
+      "inputTotal": "2001",
+      "outputTotal": "2001",
+      "fee": "0",
+      "assetInputIndex": 1,
+      "receiveOutputIndex": 2,
+      "assetOffset": "2000",
+      "receiveOffset": "2000"
+    },
+    "purchase": {
+      "inputTotal": "5501",
+      "outputTotal": "5301",
+      "fee": "200",
+      "assetInputIndex": 1,
+      "receiveOutputIndex": 2,
+      "assetOffset": "5000",
+      "receiveOffset": "5000",
+      "cushion": "3766"
+    },
+    "cancel": {
+      "inputTotal": "501",
+      "outputTotal": "301",
+      "fee": "200",
+      "assetInputIndex": 0,
+      "receiveOutputIndex": 0,
+      "assetOffset": "0",
+      "receiveOffset": "0"
+    }
+  },
+  "scope": "Origin seed is synthetic/unvalidated. All listing/purchase/alternative-cancel inputs pass actual SDK Spend. Purchase and cancel conflict. Evidence callbacks and CWI are mock-only; no SPV, real wallet, availability or delivery claim."
+}
