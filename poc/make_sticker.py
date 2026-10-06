@@ -118,7 +118,7 @@ def build_sticker(url: str, sticker_id: str, message: str) -> Image.Image:
 def main() -> int:
     ap = argparse.ArgumentParser(description="SV Codes campaign sticker generator")
     ap.add_argument("--id", required=True, help="sticker id (analytics), e.g. main-st-01")
-    ap.add_argument("--url", default="https://futureman19.github.io/sv-codes/j/",
+    ap.add_argument("--url", default="https://svcode.org/j/",
                     help="landing page URL the QR points to")
     ap.add_argument("--message", default=DEFAULT_MESSAGE, help="SV grid payload (<=227 bytes)")
     ap.add_argument("--out", help="output PNG (default stickers/<id>.png)")

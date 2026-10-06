@@ -40,7 +40,7 @@ Play an animated stream on screen (point a phone/webcam at it):
 .venv/Scripts/python.exe encode.py "Longer message that spills into fountain mode..." --play
 ```
 
-Scan with a webcam — works against `encode.py --play` output **or the live website demo** at https://futureman19.github.io/sv-codes/ :
+Scan with a webcam — works against `encode.py --play` output **or the live website demo** at https://svcode.org/ :
 
 ```bash
 .venv/Scripts/python.exe scanner.py --demo-ok

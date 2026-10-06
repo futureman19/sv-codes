@@ -4,12 +4,12 @@
 
 SV Code (Satoshi Vision Code) is a visual data-matrix protocol built for machines, not humans. Where QR codes were designed in 1994 for human scanners and print media, SV Codes are raw binary pixel grids with chromatic corner anchors, streamed as animated frames with rateless fountain-code recovery. A camera-equipped device points at a screen (or printed grid) and reconstructs a cryptographically signed payload — a command envelope, a BSV transaction, or a full SPV proof package — without Wi-Fi, cellular, Bluetooth, or any network stack.
 
-**Live site:** <https://futureman19.github.io/sv-codes/>
+**Live site:** <https://svcode.org/>
 
-- **[Transmitter + camera scanner](https://futureman19.github.io/sv-codes/)** — broadcast an SV Code from one screen, scan it with another device's camera
-- **[/verify/](https://futureman19.github.io/sv-codes/verify/)** — verify a real anchored command layer-by-layer in your browser (signature → fee payment → merkle inclusion + PoW), including a fresh-from-chain mode
-- **[/ble/](https://futureman19.github.io/sv-codes/ble/)** — BMP-BLE receiver demo (Web Bluetooth)
-- **[/j/](https://futureman19.github.io/sv-codes/j/)** — sticker-campaign landing page: scan a sticker, get a micro-wallet, claim real sats
+- **[Transmitter + camera scanner](https://svcode.org/)** — broadcast an SV Code from one screen, scan it with another device's camera
+- **[/verify/](https://svcode.org/verify/)** — verify a real anchored command layer-by-layer in your browser (signature → fee payment → merkle inclusion + PoW), including a fresh-from-chain mode
+- **[/ble/](https://svcode.org/ble/)** — BMP-BLE receiver demo (Web Bluetooth)
+- **[/j/](https://svcode.org/j/)** — sticker-campaign landing page: scan a sticker, get a micro-wallet, claim real sats
 
 ## The protocol underneath: BMP
 

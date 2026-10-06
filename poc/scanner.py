@@ -1,7 +1,7 @@
 """SV Code webcam scanner.
 
 Point a webcam at any SV Code source — the live website demo
-(https://futureman19.github.io/sv-codes/) or `encode.py --play` — and this
+(https://svcode.org/) or `encode.py --play` — and this
 decodes the stream, verifies the BMP envelope signature, and prints the action.
 
 Usage:
