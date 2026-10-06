@@ -4,7 +4,7 @@
 |---|---|
 | **Number** | SV-0002 |
 | **Title** | Sealed Collection Certificates — Visual Collectibles with On-Chain Ownership |
-| **Status** | **Draft** (graduates to Stable when a second independent implementation passes §9 test vectors AND one real mint exists on-chain) |
+| **Status** | **Stable** — independent Python/JavaScript certificate decoding and first mainnet mint verified (edition #052; §9.1). Demo issuer security is not production security. |
 | **Category** | Application Specification (Bitcoin Machine Protocol) |
 | **Created** | 2026-10-06 |
 | **Requires** | SV-0001 (visual matrix), BMP-0000 ([bmp repo](https://github.com/futureman19/bmp)) |
@@ -57,7 +57,11 @@ The certificate is carried as BMP envelope data (§5) inside one static frame: 2
 
 ### 4.1 Mint
 
-The issuer creates the ordinal: a transaction paying 1 satoshi to an issuer-controlled address, with an `OP_FALSE OP_RETURN` output containing `SV2 ‖ SHA-256(certificate_bytes)`. The txid of this transaction becomes `mint`. Minting SHOULD happen before or at public reveal; until mint exists, a certificate is a promise, not a piece.
+The issuer creates the ordinal: a transaction paying 1 satoshi at output 0 to an issuer-controlled address, or directly to the collector for lazy mint-on-claim (SV-0003). A zero-value output contains `OP_FALSE OP_RETURN <SV2 ‖ SHA-256(pre_mint_certificate_bytes)>`, where the angle brackets denote one pushed byte string (ASCII `SV2` followed by the 32-byte digest).
+
+To construct `pre_mint_certificate_bytes`, copy the certificate, replace `mint` with exactly 64 lowercase zero characters, and serialize canonically under §3. All other fields remain unchanged. Hash these bytes, build and sign the transaction, then fill its txid into the final certificate's `mint` field and sign the final BMP envelope. This order removes the circular dependency between certificate hash and mint txid. Verifiers MUST recompute the commitment using the identical zeroed-`mint` procedure, NOT hash the final certificate directly.
+
+Minting SHOULD happen before or at public reveal; until mint exists, a certificate is a promise, not a piece. A direct-to-collector mint fuses mint and initial delivery into one transaction; the address-only free claim does not prove that the requester controls that address. Subsequent transfers still require the owner's transaction signature.
 
 ### 4.2 Claim
 
@@ -132,14 +136,14 @@ Economies that cannot tolerate simultaneous utility (yield-bearing items, consum
 | Tier | Check | Answers |
 |---|---|---|
 | Scan | SV-0001 decode + BMP signature verify (L1) | "Is this a genuine issuer certificate?" |
-| Anchor | SPV-verify `mint` tx exists; its OP_RETURN hash matches `SHA-256(cert)` (L2) | "Is this certificate anchored on-chain?" |
+| Anchor | SPV-verify `mint` tx exists; its OP_RETURN hash matches `SHA-256(pre_mint_certificate_bytes)` with `mint` zeroed per §4.1 (L2) | "Is this certificate anchored on-chain?" |
 | Owner | Trace `mint:n` UTXO to its current holder (indexer or node) | "Who owns it right now?" |
 
 A screenshot of a piece passes Scan and Anchor for the *original* — and fails Owner for the screenshotter. That asymmetry is the product.
 
 ## 9. Test vectors
 
-Vector 1 (schema conformance; mint is a placeholder pending first real mint):
+Vector 1 (historical schema-conformance example; not a live-chain receipt):
 
 ```
 canonical cert (215 bytes):
@@ -151,6 +155,21 @@ round-trip     = parse → re-serialize canonically → byte-identical  PASS
 ```
 
 Implementations MUST round-trip: parse → re-serialize canonically → byte-identical.
+
+### 9.1 First mainnet mint and independent round-trip receipt
+
+- Collection `sv-genesis`, edition **52/100**, seed `f8ef2a`.
+- Transaction `f8200f6f3573ba4e19fa8f94727fa6d76ca89b587dcaec0b67190efe745cbaa9`, output 0: **1 satoshi** to `1FpHQ4VrLYGp1sLDNXs5Cxh3x8KE4opYgU`.
+- Output 1 script: `006a23535632a61b5c26f824691bc38054800dd85a28a57e30eab4bd3052392e1cf0991c36b5`.
+- Pre-mint certificate SHA-256: `a61b5c26f824691bc38054800dd85a28a57e30eab4bd3052392e1cf0991c36b5`.
+- Final canonical certificate: **221 bytes**. Published signed envelope and certificate: [`genesis-052-receipt.json`](../docs/nft/genesis/genesis-052-receipt.json).
+- Python: PNG and JPEG-q80 signature VALID and byte-exact envelope/certificate recovery.
+- Independent JavaScript: PNG and JPEG signature VALID and canonical certificate MATCH; **11 checks passed**.
+- WoC returned the transaction and exact outputs; this receipt is not an SPV inclusion proof. Confirmation count is time-dependent and must be re-queried.
+
+The published [canonical reveal PNG](../docs/nft/genesis/genesis-052-reveal.png) hashes to `921a9d57b3a474a9429512501b957e1ee2b5ac11bc500827907d9c82ddd4a487` **only if matching full bytes are supplied**; the normative short `art` commitment is `921a9d57b3a474a9`. Re-encoding identical pixels may produce different PNG compression bytes across platforms. Verifiers of `art` MUST use the issuer's canonical file, not assume their PNG encoder emits identical bytes. Local Windows and issuer Linux rendering were checked pixel-byte-identical.
+
+The historical unminted #001 design vector is retained unchanged for regression tests; it is not the vending machine's live edition #001. All demo signatures use a publicly documented demo key and do not establish production anti-forgery security.
 
 ## 10. Reserved
 

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SV-GENESIS #001 — the first sealed collectible</title>
-<meta name="description" content="Piece #001 of the SV-GENESIS collection: the artwork is the SV Code. Scan it and it reveals a procedurally generated blade with traits — ownership lives on-chain per SV-0002.">
+<title>SV-GENESIS — anchored collection</title>
+<meta name="description" content="Edition #052 of the SV-GENESIS collection: the artwork is the SV Code. Scan it and it reveals a procedurally generated blade with traits — ownership lives on-chain per SV-0002.">
 <style>
   :root { --bg:#070912; --panel:#0e1220; --ink:#e8eaf2; --dim:#9aa3b8; --gold:#a88a4a; --cyan:#35f0ff; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -48,42 +48,42 @@
   <a href="https://github.com/futureman19/sv-codes">GitHub</a>
 </nav>
 <main>
-  <div class="tag">SV-GENESIS · PIECE #001 OF 100 · SV-0002 REFERENCE COLLECTIBLE</div>
+  <div class="tag">SV-GENESIS · FIRST LIVE MINT: EDITION #052 OF 100</div>
   <h1>You don't trade the JPEG. You trade the code.</h1>
   <p class="sub">The artwork on the left <b>is</b> the certificate — a full-bleed SV Code with a sword carried in its cell pattern. Scanning it reveals the item on the right: a blade generated deterministically from the certificate's seed, with traits listed in the certificate itself. Screenshot it all you want — the copy still points at the same on-chain mint, and the chain says who owns it.</p>
 
   <div class="hero">
     <div>
-      <img src="../genesis-001-code.png" alt="SV-GENESIS #001 — the collectible code artwork with sword motif">
+      <img src="genesis-052-code.png" alt="SV-GENESIS #052 — the collectible code artwork with sword motif">
       <p><b>The collectible.</b> 64×64 matrix, sword motif in the tone channel, four anchor corners. This image is the token.</p>
     </div>
     <div>
-      <img src="../genesis-001-reveal.png" alt="SV-GENESIS #001 — the revealed procedural blade">
-      <p><b>The reveal.</b> Generated from <code>(item, seed)</code> — umbral-core, wave-edge genesis blade. Any engine re-derives it; the <code>art</code> hash pins this canonical render.</p>
+      <img src="genesis-052-reveal.png" alt="SV-GENESIS #052 — the revealed procedural blade">
+      <p><b>The reveal.</b> Generated from <code>(item, seed)</code> — ember-core, serrated-edge genesis blade. Any engine re-derives it; the <code>art</code> hash pins this canonical render.</p>
     </div>
   </div>
 
   <section>
     <h2>What the code says</h2>
     <pre>{
-  "art": "2985a151265ec200",     <span style="color:#5a668a">// hash of the reveal render</span>
+  "art": "921a9d57b3a474a9",     <span style="color:#5a668a">// hash of the reveal render</span>
   "col": "sv-genesis",
-  "ed": 1, "of": 100,
+  "ed": 52, "of": 100,
   "item": "genesis-blade",
-  "mint": "0000…0000",          <span style="color:#5a668a">// pre-mint placeholder (SV-0002 §4.1)</span>
-  "seed": "a91f3c",
-  "tr": {"core": "umbral", "edge": "wave"},
+  "mint": "f8200f6f3573ba4e19fa8f94727fa6d76ca89b587dcaec0b67190efe745cbaa9",
+  "seed": "f8ef2a",
+  "tr": {"core": "ember", "edge": "serrated"},
   "v": 2
 }</pre>
-    <p class="sub" style="margin-top:10px">217 bytes — inside the 227-byte static-frame budget. Signed by the SV-GENESIS issuer key · action <code>0xA47C</code> · target <code>GEN1</code>. Scan it with the <a href="/#broadcast">scanner</a>.</p>
+    <p class="sub" style="margin-top:10px">221 bytes — inside the 227-byte static-frame budget. Signed by the SV-GENESIS issuer key · action <code>0xA47C</code> · target <code>GEN1</code>. Scan it with the <a href="/#broadcast">scanner</a>.</p>
   </section>
 
   <section>
     <h2>The loop (SV-0002)</h2>
     <div class="loop">
-      <div class="card"><h3>1 · Scan</h3><p>Any camera decodes the matrix; the issuer's ECDSA signature verifies. Forgery requires breaking secp256k1.</p></div>
+      <div class="card"><h3>1 · Scan</h3><p>Any camera decodes the matrix; the issuer's ECDSA signature verifies. This demonstration uses a publicly known issuer key, not a secure production identity.</p></div>
       <div class="card"><h3>2 · Reveal</h3><p>The cert's <code>item</code> selects the generator, <code>seed</code> drives it, <code>art</code> pins the canonical render. Every honoring game renders it in its own style.</p></div>
-      <div class="card"><h3>3 · Own</h3><p>Ownership is the 1-satoshi ordinal at <code>mint</code>. Claim = wallet-signed binding TX. Transfer = an ordinary ordinal send. No key ever changes hands.</p></div>
+      <div class="card"><h3>3 · Own</h3><p>Ownership is the 1-satoshi ordinal at <code>mint</code>. Free claim = mint directly to the receiving address. Transfer = an ordinary ordinal send. No key ever changes hands.</p></div>
     </div>
   </section>
 
@@ -92,15 +92,15 @@
     <div class="receipts">
       <div class="card">
         <h3 style="font-size:15px;margin-bottom:8px;color:var(--gold)">Python reference decoder</h3>
-        <pre>[genesis-001-code.png]  sig: VALID  cert: MATCH
-[genesis-001-code.jpg]  sig: VALID  cert: MATCH  (q80)</pre>
+        <pre>[genesis-052-code.png]  sig: VALID  cert: MATCH
+[genesis-052-code.jpg]  sig: VALID  cert: MATCH  (q80)</pre>
       </div>
       <div class="card">
         <h3 style="font-size:15px;margin-bottom:8px;color:var(--gold)">JavaScript site decoder — 11 checks</h3>
         <pre>11 passed, 0 failed
 bits ✓ · stream ✓ · ECDSA ✓ · action/target ✓
 identity ✓ · edition ✓ · seed+traits ✓
-art hash ✓ · pre-mint placeholder ✓
+canonical art hash ✓ · real mint txid ✓
 payload == canonical cert ✓</pre>
       </div>
     </div>
@@ -108,10 +108,11 @@ payload == canonical cert ✓</pre>
 
   <section>
     <div class="tag">STATUS</div>
-    <h2>Pre-mint</h2>
-    <p class="sub" style="margin:0">This piece is the SV-0002 reference build: certificate, artwork, reveal loop, and dual-decoder verification are complete. The <code>mint</code> field carries the pre-mint placeholder; anchoring piece #001 on-chain (1 satoshi + <code>SV2‖SHA-256(cert)</code> OP_RETURN) is the next step and graduates the spec toward Stable. Generator: <a href="https://github.com/futureman19/sv-codes/blob/main/poc/make_genesis_001.py">source</a> · Spec: <a href="https://github.com/futureman19/sv-codes/blob/main/spec/SV-0002-sealed-collection-certificates.md">SV-0002</a></p>
+    <h2>Anchored · first live mint</h2>
+    <p class="sub" style="margin:0">Edition #052 was minted directly to the approved test recipient in <a href="https://whatsonchain.com/tx/f8200f6f3573ba4e19fa8f94727fa6d76ca89b587dcaec0b67190efe745cbaa9">this mainnet transaction</a>. Output 0 carries one satoshi; output 1 anchors the SHA-256 of the certificate with its mint field zeroed. The returned 221-byte certificate passed independent Python and JavaScript PNG/JPEG decoders. This is a broadcast/indexer-verified anchor, not a browser SPV proof. <a href="mint/">Open the free mint poster</a> · <a href="genesis-052-receipt.json">Signed receipt</a> · <a href="https://sv-mint.fly.dev/mint/sv-genesis/status">Live supply</a>.</p>
+    <p class="sub">The earlier #001 artwork was an unminted design vector with seed a91f3c; it is not the live vending-machine edition #001. It remains an archived regression fixture. The first randomly assigned live edition is #052. The issuer key is public demo material: do not treat this collection as production-secure or use it for purchases.</p>
   </section>
 </main>
-<footer>SV-GENESIS #001 · series: <a href="/nft/">#12</a> · <a href="/nft/facade/">#13</a> · <a href="/nft/rooftop/">#14</a> · <a href="/nft/bonsai/">#15</a> · <a href="/nft/emberlong/">⚔</a></footer>
+<footer>SV-GENESIS #052 · series: <a href="/nft/">#12</a> · <a href="/nft/facade/">#13</a> · <a href="/nft/rooftop/">#14</a> · <a href="/nft/bonsai/">#15</a> · <a href="/nft/emberlong/">⚔</a></footer>
 </body>
 </html>

@@ -1,0 +1,13 @@
+**
+!mint/
+mint/**
+!mint/Dockerfile
+!mint/requirements.txt
+!mint/server.py
+!mint/txbuilder.py
+!poc/
+poc/**
+!poc/make_genesis_001.py
+!poc/svcode/
+poc/svcode/**
+!poc/svcode/*.py

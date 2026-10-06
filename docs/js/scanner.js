@@ -7,7 +7,7 @@ const ACTION_NAMES = {
   0x0000:"NOP", 0x0001:"HALT", 0x0002:"REPORT_STATUS",
   0x00A1:"MOVE_TO", 0x00A2:"MOVE_VECTOR", 0x00B1:"CLAIM_BOUNTY",
   0x00C1:"SET_CONFIG", 0x00FF:"VENDOR", 0xA47C:"COLLECTION_ITEM_CERT",
-  0x17E9:"GAME_ITEM_CERT",
+  0x17E9:"GAME_ITEM_CERT", 0xC1A1:"MINT_CLAIM",
 };
 
 /* Known issuers: pubkey hex -> display label. Verification is against the
@@ -119,7 +119,7 @@ function boot(){
         <div class="item-head">
           <div>
             <div class="item-name">${escapeHtml(title)}</div>
-            <div class="item-sub">${escapeHtml(cert.col)} · edition ${cert.ed} of ${cert.of}</div>
+            <div class="item-sub">${escapeHtml(cert.col)} · edition ${escapeHtml(String(cert.ed))} of ${escapeHtml(String(cert.of))}</div>
           </div>
           ${sigBadge}
         </div>
@@ -133,7 +133,7 @@ function boot(){
     card.style.display = "block";
     card.classList.remove("bad");
     const cv = document.getElementById(cid);
-    if (cv && window.SVReveal){
+    if (cv && typeof SVReveal !== "undefined"){
       const p = SVReveal.render(cv, cert.item, cert.seed);
       if (!p){
         const ctx = cv.getContext("2d");
@@ -145,8 +145,14 @@ function boot(){
     }
   }
 
+  let disposeMint = null;
   function showResult(res){
+    if (disposeMint) { disposeMint(); disposeMint = null; }
     const env = res.env;
+    if (env.action === 0xC1A1 && typeof SVMint !== "undefined") {
+      disposeMint = SVMint.mount(card, res);
+      if (disposeMint) { lastReport = ""; return; }
+    }
     const name = ACTION_NAMES[env.action] || ("0x" + env.action.toString(16).padStart(4, "0"));
     let payload = "";
     try { payload = new TextDecoder().decode(env.payload); } catch (e) { payload = "[" + env.payload.length + " bytes]"; }

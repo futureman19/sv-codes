@@ -1,0 +1,37 @@
+{
+  "cert": {
+    "col": "sv-genesis",
+    "endpoint": "https://sv-mint.fly.dev",
+    "exp": 0,
+    "price": 0,
+    "supply": 100,
+    "v": 3
+  },
+  "cert_bytes": 94,
+  "cert_sha256": "ca6a9c122ac1f1e67862d82ed8cd266eff8144cf1ec116907b4ab371a7152735",
+  "issuer_pub": "023a6f32a0528c1b02899c3dbd28cd055fa64ca626271578da4b4261076407a11d",
+  "action": 49569,
+  "target_id": 1195724337,
+  "envelope": "0147454e31c1a100000000000000006ac5400e005ee48f360a54801052f1f72e21c9499512889dbbdfb3a28205ef93ac36f6d28a560dab359c72a95cb97c5029900455d512f720d2dc2801d1b58602f604e85ad91a7b22636f6c223a2273762d67656e65736973222c22656e64706f696e74223a2268747470733a2f2f73762d6d696e742e666c792e646576222c22657870223a302c227072696365223a302c22737570706c79223a3130302c2276223a337d",
+  "static": true,
+  "nonce": 0,
+  "python_verification": [
+    {
+      "file": "mint-master-code.png",
+      "signature": "VALID",
+      "certificate": "MATCH",
+      "envelope": "MATCH",
+      "bit_errors": 0,
+      "sha256": "fee9f5c3e74de52cb84c230c2ada5ac012568c38bd34737bb2cabe646686faae"
+    },
+    {
+      "file": "mint-master-code.jpg",
+      "signature": "VALID",
+      "certificate": "MATCH",
+      "envelope": "MATCH",
+      "bit_errors": 0,
+      "sha256": "58523aad68e840818c5d55fc926f4028a5f86c440a1451720c86bafc269e2e5e"
+    }
+  ],
+  "warning": "Public demo issuer key; not production anti-forgery security."
+}

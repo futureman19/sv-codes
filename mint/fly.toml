@@ -1,0 +1,37 @@
+app = "sv-mint"
+primary_region = "sjc"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  DB_PATH = "/data/mint.db"
+  FEE_SATS = "300"
+  MAX_IP_PER_DAY = "3"
+  # Explicit verified funding parent permits safe unconfirmed bootstrap.
+  FUNDING_TXID = "9eae5cc6662a44562cbd32c8cfc72c85dd7bbf04344135502e0a24d93737bf35"
+
+[mounts]
+  source = "mint_data"
+  destination = "/data"
+  initial_size = "1gb"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "60s"
+    method = "GET"
+    path = "/health"
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1

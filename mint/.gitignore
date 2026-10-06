@@ -1,0 +1,11 @@
+.venv/
+.test-tmp/
+__pycache__/
+.pytest_cache/
+*.db
+*.db-shm
+*.db-wal
+*.db.lock
+art/
+.env
+*.log

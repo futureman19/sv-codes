@@ -109,6 +109,13 @@
   .sig.ok{border:1px solid var(--green);color:var(--green)}
   .sig.demo{border:1px solid var(--yellow);color:var(--yellow)}
   .sig.bad{border:1px solid var(--red);color:var(--red)}
+  .scan-result input{width:100%;padding:12px;margin:8px 0;background:var(--bg);color:var(--text);border:1px solid var(--border)}
+  .scan-result button{margin:8px 8px 8px 0}
+  .scan-result button:disabled{opacity:.5;cursor:not-allowed}
+  .scan-result p,.scan-result h4{margin:10px 0}
+  .scan-result a{display:block;overflow-wrap:anywhere}
+  .personal-code{image-rendering:pixelated;border-radius:0}
+  .personal-code[hidden]{display:none}
   /* pipeline */
   .pipe{counter-reset:step;display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .step{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 20px;font-size:13px;color:var(--dim);position:relative;padding-left:58px}
@@ -257,7 +264,7 @@ This text is wrapped in a signed BMP envelope, framed with CRC32, and fountain-s
       <div class="scan-side">
         <span class="hint" id="scanStatus">camera off — everything runs locally in this page</span>
         <div id="scanResult" class="scan-result" style="display:none"></div>
-        <p class="hint" style="margin-top:16px">Open this page on your phone, start the camera, and point it at a grid — the transmitter above on your laptop screen, or a printed static frame. The full SV-0001 §6 pipeline runs in your browser: color masks → homography → fountain solve → CRC32 → secp256k1 verify. No server, no upload.</p>
+        <p class="hint" style="margin-top:16px">Open this page on your phone, start the camera, and point it at a grid — the transmitter above on your laptop screen, or a printed static frame. The full SV-0001 §6 pipeline runs in your browser: color masks → homography → fountain solve → CRC32 → secp256k1 verify. No image upload. Approved mint tokens additionally contact the mint service for availability and claims.</p>
         <p class="hint" style="margin-top:10px"><b>Scrolling instead?</b> Screenshot the code and drop it here — no camera needed:</p>
         <div style="margin-top:8px">
           <input type="file" id="imgPick" accept="image/*" style="display:none">
@@ -371,6 +378,7 @@ This text is wrapped in a signed BMP envelope, framed with CRC32, and fountain-s
 <script src="js/encoder.js"></script>
 <script src="js/decoder.js"></script>
 <script src="js/reveal.js"></script>
+<script src="js/mint.js"></script>
 <script src="js/scanner.js"></script>
 <script>
 /* PWA: service worker + install prompt */
