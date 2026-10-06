@@ -6,8 +6,14 @@ const S = SVC, D = SVDec;
 const ACTION_NAMES = {
   0x0000:"NOP", 0x0001:"HALT", 0x0002:"REPORT_STATUS",
   0x00A1:"MOVE_TO", 0x00A2:"MOVE_VECTOR", 0x00B1:"CLAIM_BOUNTY",
-  0x00C1:"SET_CONFIG", 0x00FF:"VENDOR",
+  0x00C1:"SET_CONFIG", 0x00FF:"VENDOR", 0xA47C:"COLLECTION_ITEM_CERT",
+  0x17E9:"GAME_ITEM_CERT",
 };
+
+/* Known issuers: pubkey hex -> display label. Verification is against the
+   envelope signature; the label just names the key that matched. */
+const ISSUERS = {};
+function registerIssuer(hex, label){ ISSUERS[hex.toLowerCase()] = label; }
 
 function boot(){
   const btn = document.getElementById("camStart");
@@ -17,7 +23,11 @@ function boot(){
   const statusEl = document.getElementById("scanStatus");
   const card = document.getElementById("scanResult");
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
-  const scanner = new D.StreamScanner(SVEnc.GOLDEN_PUB_HEX);
+  registerIssuer(SVEnc.GOLDEN_PUB_HEX, "test authority");
+  registerIssuer("023a6f32a0528c1b02899c3dbd28cd055fa64ca626271578da4b4261076407a11d", "SV-GENESIS issuer");
+  registerIssuer("038e2cb0ea841f2975ef15d762653ea481f6bc076bcb2683d21a8dc0bc5a486538", "Night Districts Studio (demo)");
+  registerIssuer("031f179f4318ee0402cf66ff1f5d6eb07a8b341458b6e8c02c140a0f98cf810f0c", "Grydbound Armory (demo)");
+  const scanner = new D.StreamScanner(Object.keys(ISSUERS));
   let running = false, lastReport = "";
 
   btn.addEventListener("click", async () => {
@@ -35,37 +45,63 @@ function boot(){
     }
   });
 
-  function loop(){
-    if (!running) return;
-    if (video.readyState >= 2){
-      const vw = video.videoWidth, vh = video.videoHeight;
-      const scale = Math.min(1, 960 / vw);
-      canvas.width = Math.round(vw * scale); canvas.height = Math.round(vh * scale);
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const anchors = D.findAnchors(img.data, img.width, img.height);
-      if (anchors){
-        // overlay quad
-        ctx.strokeStyle = "#22d3ee"; ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(anchors[0][0], anchors[0][1]);
-        ctx.lineTo(anchors[1][0], anchors[1][1]);
-        ctx.lineTo(anchors[3][0], anchors[3][1]);
-        ctx.lineTo(anchors[2][0], anchors[2][1]);
-        ctx.closePath(); ctx.stroke();
-        const bits = D.decodeImageData(img.data, img.width, img.height);
-        if (bits){
-          const res = scanner.feedBits(bits);
-          const prog = scanner.progress();
-          statusEl.textContent = res ? "decoded ✓"
-            : prog ? `collecting… ${prog[0]}/${prog[1]} symbols (${scanner.framesSeen} frames)`
-            : "grid found, reading…";
-          if (res) showResult(res);
-        }
-      } else {
-        statusEl.textContent = "searching for grid…";
-      }
+  const VOTE_WINDOW = 9;                 // frames of per-cell majority vote
+  let votes = [];                        // ring buffer of 2,704-bit frames
+  let anchorMisses = 0, solved = false;
+
+  function votedBits(){
+    const n = votes.length, out = new Array(2704).fill(0);
+    for (let i = 0; i < 2704; i++){
+      let s = 0;
+      for (let k = 0; k < n; k++) s += votes[k][i];
+      out[i] = s * 2 > n ? 1 : 0;
     }
+    return out;
+  }
+
+  function loop(){
+    try {
+      if (video.readyState >= 2){
+        const vw = video.videoWidth, vh = video.videoHeight;
+        const scale = Math.min(1, 960 / vw);
+        canvas.width = Math.round(vw * scale); canvas.height = Math.round(vh * scale);
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const anchors = D.findAnchors(img.data, img.width, img.height);
+        if (anchors){
+          anchorMisses = 0;
+          // overlay quad
+          ctx.strokeStyle = "#22d3ee"; ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(anchors[0][0], anchors[0][1]);
+          ctx.lineTo(anchors[1][0], anchors[1][1]);
+          ctx.lineTo(anchors[3][0], anchors[3][1]);
+          ctx.lineTo(anchors[2][0], anchors[2][1]);
+          ctx.closePath(); ctx.stroke();
+          const bits = D.decodeImageData(img.data, img.width, img.height);
+          if (bits){
+            votes.push(bits);
+            if (votes.length > VOTE_WINDOW) votes.shift();
+            if (!solved){
+              const res = scanner.feedBits(votedBits());
+              const prog = scanner.progress();
+              statusEl.textContent = res ? "decoded ✓"
+                : prog ? `locking… ${prog[0]}/${prog[1]} symbols — hold steady`
+                : `grid found, locking… (${votes.length} frames voted)`;
+              if (res){ solved = true; showResult(res); }
+            }
+          }
+        } else {
+          anchorMisses++;
+          if (anchorMisses > 12){          // ~1.2s of misses: genuinely lost
+            votes.length = 0;
+            statusEl.textContent = "searching for grid…";
+          } else if (!solved){
+            statusEl.textContent = "hold steady — re-acquiring…";
+          }
+        }
+      }
+    } catch (e) { /* a bad frame must never kill the scan loop */ }
     setTimeout(loop, 100);
   }
 
@@ -74,9 +110,10 @@ function boot(){
     const name = ACTION_NAMES[env.action] || ("0x" + env.action.toString(16).padStart(4, "0"));
     let payload = "";
     try { payload = new TextDecoder().decode(env.payload); } catch (e) { payload = "[" + env.payload.length + " bytes]"; }
-    const sigBadge = res.sig === "valid" ? '<span class="sig ok">VALID ✓ test authority</span>'
+    const sigBadge = res.sig === "valid"
+        ? `<span class="sig ok">VALID ✓ ${escapeHtml(ISSUERS[(res.issuer||"").toLowerCase()] || "registered issuer")}</span>`
       : res.sig === "demo" ? '<span class="sig demo">DEMO (zeroed sig)</span>'
-      : res.sig === "invalid" ? '<span class="sig bad">INVALID ✗</span>'
+      : res.sig === "invalid" ? '<span class="sig bad">INVALID ✗ unknown issuer</span>'
       : '<span class="sig demo">unverified</span>';
     const html = `
       <div class="res-row"><span>ACTION</span><b>${name} (0x${env.action.toString(16).padStart(4,"0")})</b></div>

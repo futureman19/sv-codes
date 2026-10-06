@@ -107,26 +107,44 @@ function decodeImageData(data, width, height){
   }
   const theta = (lo + hi) / 2;
   if (hi - lo < 40) return null;               // no contrast -> not a grid
-  // pass 2: 5-point majority vote around each center (+-0.22 cell)
-  const bits = new Uint8Array(FRAME_BITS);
-  const OFFS = [[0,0],[-0.22,-0.22],[0.22,-0.22],[-0.22,0.22],[0.22,0.22]];
+  // pass 2: block-averaged sampling — 4x4 sub-samples within the central 50%
+  // of each cell, then a global Otsu threshold on the 2,704 cell means.
+  // (Matches the Python decoder's noise immunity: area averaging + Otsu,
+  // not 5 point samples + midpoint threshold.)
+  const SUB = [-0.225, -0.075, 0.075, 0.225];
+  const means = new Float32Array(FRAME_BITS);
   for (let i = 0; i < FRAME_BITS; i++){
     const r = OFFSET + Math.floor(i / INNER), c = OFFSET + (i % INNER);
-    let dark = 0;
-    for (const [dx, dy] of OFFS){
+    let acc = 0;
+    for (const dy of SUB) for (const dx of SUB){
       const [X, Y] = applyH(H, c + 0.5 + dx, r + 0.5 + dy);
-      if (gray(data, width, X, Y) < theta) dark++;
+      acc += gray(data, width, X, Y);
     }
-    bits[i] = dark >= 3 ? 1 : 0;
+    means[i] = acc / 16;
   }
+  // Otsu is wrong here: picture-in-matrix art is MULTI-modal (soft inks and
+  // tints sit between field and ink), and Otsu splits the biggest cluster.
+  // The format contract pins the extremes instead: bit-1 ink is the darkest
+  // tone, the payload field is the lightest — so threshold at their midpoint.
+  let mLo = 255, mHi = 0;
+  for (let i = 0; i < FRAME_BITS; i++){
+    if (means[i] < mLo) mLo = means[i];
+    if (means[i] > mHi) mHi = means[i];
+  }
+  const thetaB = (mLo + mHi) / 2;
+  const bits = new Uint8Array(FRAME_BITS);
+  for (let i = 0; i < FRAME_BITS; i++) bits[i] = means[i] < thetaB ? 1 : 0;
   return bits;
 }
 
-/* Stream decoder: accumulate frames -> envelope. verify via authority pubkey. */
+/* Stream decoder: accumulate frames -> envelope. verify via authority pubkey(s). */
 class StreamScanner {
   constructor(authorityPubHex){
     this.lts = new Map();                      // K -> LTDecoder
-    this.authority = authorityPubHex ? S.parsePubkey(authorityPubHex) : null;
+    // accepts one hex string or an array of them (issuer registry)
+    const pubs = Array.isArray(authorityPubHex) ? authorityPubHex
+               : authorityPubHex ? [authorityPubHex] : [];
+    this.authorities = pubs.map(p => ({hex: p, Q: S.parsePubkey(p)}));
     this.framesSeen = 0;
     this.lastK = null;
   }
@@ -146,13 +164,17 @@ class StreamScanner {
         try { content = S.parseStream(buf); }
         catch (e) { this.lts.delete(K); return null; }  // mixed streams: reset K
         const env = S.parseEnvelope(content);
-        let sig;
+        let sig, issuer = null;
         if (env.signature.every(b => b === 0)) sig = "demo";
-        else if (this.authority)
-          sig = S.ecdsaVerify(this.authority, env.signature, S.envelopeDigest(content))
-              ? "valid" : "invalid";
+        else if (this.authorities.length){
+          const digest = S.envelopeDigest(content);
+          sig = "invalid";
+          for (const a of this.authorities){
+            if (S.ecdsaVerify(a.Q, env.signature, digest)){ sig = "valid"; issuer = a.hex; break; }
+          }
+        }
         else sig = "unverified";
-        return {env, ctype, sig};
+        return {env, ctype, sig, issuer};
       }
     }
     return null;
