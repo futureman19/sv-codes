@@ -6,6 +6,7 @@ telegram_bot/**
 !telegram_bot/decoder.py
 !telegram_bot/reveal.py
 !telegram_bot/service.py
+!telegram_bot/bootstrap.py
 !telegram_bot/requirements.txt
 !telegram_bot/Dockerfile
 !poc/

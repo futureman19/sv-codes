@@ -6,5 +6,4 @@ COPY telegram_bot/requirements.txt /app/telegram_bot/requirements.txt
 RUN pip install --no-cache-dir -r telegram_bot/requirements.txt && useradd --uid 10001 --create-home decoder && mkdir /data && chown decoder:decoder /data
 COPY poc/svcode /app/poc/svcode
 COPY telegram_bot /app/telegram_bot
-USER decoder
-CMD ["python", "-B", "-m", "telegram_bot", "serve"]
+CMD ["python", "-B", "-m", "telegram_bot.bootstrap"]

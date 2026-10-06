@@ -1,4 +1,4 @@
-# EXAMPLE ONLY. Do not provision/deploy without approval and a dedicated token.
+# Dedicated @svcodesbot deployment; token exists only in Fly secrets.
 app = "sv-code-decoder"
 primary_region = "lax"
 kill_signal = "SIGTERM"
@@ -9,9 +9,10 @@ kill_timeout = "30s"
 
 [env]
   TELEGRAM_STATE_DB = "/data/offset.sqlite3"
+  TELEGRAM_EXPECTED_USERNAME = "svcodesbot"
 
 [processes]
-  app = "python -B -m telegram_bot serve"
+  app = "python -B -m telegram_bot.bootstrap"
 
 [[mounts]]
   source = "decoder_state"
@@ -20,5 +21,5 @@ kill_timeout = "30s"
 [[vm]]
   size = "shared-cpu-1x"
   memory = "512mb"
-# No public HTTP service. Exactly ONE machine / poller. Mounted volume must
-# be writable by uid 10001 (initialize ownership before running this image).
+# No public HTTP service. Exactly ONE machine / poller. Bootstrap initializes
+# mounted-volume ownership then drops to uid/gid10001 before polling.

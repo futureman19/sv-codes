@@ -2,7 +2,7 @@
 
 Python long-polling bot: `/start`, `/help`, photos (largest Telegram version), and PNG/JPEG documents. No wallet, claim endpoint request, transaction, spending, payload URL fetch, or network-based chain verification exists in this service.
 
-**Launch prerequisite: a dedicated BotFather token is absent.** An operator must create/select a dedicated bot and provide its token through a secret manager as `TELEGRAM_BOT_TOKEN`. Never reuse a Hermes bot token, paste a token into source/chat, or launch two pollers with the same token. This work does not provision or deploy anything.
+**Live deployment:** @svcodesbot runs as a single worker in Fly app `sv-code-decoder`, with encrypted `decoder_state` storage. The operator installed `TELEGRAM_BOT_TOKEN` directly in Fly. Startup checks `getMe` against `TELEGRAM_EXPECTED_USERNAME=svcodesbot` and refuses an existing webhook before polling. Never reuse a Hermes token, paste tokens into source/chat, or run two pollers for the same bot. Real user-message delivery remains the final acceptance check.
 
 ## Local offline verification (no token)
 
@@ -54,7 +54,7 @@ Exactly **one service process / machine** should use the DB and token. On a new 
 
 Polling errors retry after a bounded delay (including Telegram `retry_after`, capped at 60 seconds). Update errors are skipped with a fixed sanitized log. SQLite failures are fatal rather than processing without durable offset state. Do not delete the DB unless intentionally resetting the cursor and dropping pending history.
 
-## Container / Fly example — DO NOT provision automatically
+## Container / Fly deployment
 
 Build context must be the **repository root**:
 
@@ -62,8 +62,8 @@ Build context must be the **repository root**:
 docker build -f telegram_bot/Dockerfile -t sv-code-decoder .
 ```
 
-`Dockerfile.dockerignore` is Docker's Dockerfile-specific context ignore: only this service and `poc/svcode/*.py` are sent. No mint/faucet state, website artifacts, `.env`, credentials, or genesis generator enters the image. Runtime is non-root uid 10001. There is no HTTP service / public port.
+`Dockerfile.dockerignore` is Docker's Dockerfile-specific context ignore: only this service and `poc/svcode/*.py` are sent. No mint/faucet state, website artifacts, `.env`, credentials, or genesis generator enters the image. Bootstrap initializes ownership of the fixed mounted `/data` directory as root, then clears supplementary groups and drops irrevocably to uid/gid10001 before importing the service or calling Telegram. The polling worker runs non-root. There is no HTTP service / public port.
 
-`telegram_bot/fly.toml` is an **unlaunched example** for app `sv-code-decoder`: one 512 MiB worker and a persistent `decoder_state` volume at `/data`. The volume must exist and be writable by uid 10001; mounted-volume ownership overrides image-layer directory ownership, so the operator must initialize that ownership before launch. Supply the dedicated token as a Fly secret, never in TOML/build args. Run one machine only (no HA duplicate). Root-context deployment would use `flyctl deploy . --config telegram_bot/fly.toml --ignorefile C:/Users/futur/Desktop/sv-codes/telegram_bot/Dockerfile.dockerignore --ha=false` (substitute the absolute ignorefile path on another machine; Dockerfile is resolved relative to the config) **only after approval**, application/volume provisioning, ownership setup and secure token injection. None of those actions has been performed here.
+`telegram_bot/fly.toml` deploys app `sv-code-decoder`: one 512 MiB worker in LAX and a persistent encrypted 1GB `decoder_state` volume at `/data`. Bootstrap handles mount ownership before dropping privileges. Supply the dedicated token as a Fly secret, never in TOML/build args. Run one machine only (no HA duplicate). From repository root: `flyctl deploy . --remote-only --config telegram_bot/fly.toml --ignorefile C:/Users/futur/Desktop/sv-codes/telegram_bot/Dockerfile.dockerignore --ha=false` (substitute the absolute ignorefile path on another machine; Dockerfile resolves relative to the config). Live startup verified @svcodesbot, polling state persisted, and the deployed image independently decoded the published #052 JPEG and generated its reveal.
 
 Offline tests are not evidence of a live Telegram launch or Docker/Fly runtime verification. Actual image reception on a real dedicated bot remains a post-credential smoke test.

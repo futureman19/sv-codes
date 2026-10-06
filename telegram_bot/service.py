@@ -222,6 +222,18 @@ def run():
         state = State(os.environ.get('TELEGRAM_STATE_DB', 'telegram_bot/state/offset.sqlite3'))
     except Exception:
         raise SystemExit('Invalid bot configuration; check token format, chat IDs, and writable state path.') from None
+    try:
+        identity = api.request('getMe', {})
+        expected = os.environ.get('TELEGRAM_EXPECTED_USERNAME', 'svcodesbot')
+        if (not isinstance(identity, dict) or identity.get('is_bot') is not True
+                or identity.get('username', '').lower() != expected.lower()):
+            raise SystemExit('Bot identity mismatch; polling refused.')
+        webhook = api.request('getWebhookInfo', {})
+        if not isinstance(webhook, dict) or webhook.get('url'):
+            raise SystemExit('Existing webhook or invalid webhook status; polling refused.')
+    except APIError:
+        raise SystemExit('Telegram startup verification failed; details suppressed.') from None
+    print('Verified dedicated bot @' + expected + '; starting single-worker polling.', flush=True)
     bot = Bot(api, state, allowed)
     try:
         while True:
