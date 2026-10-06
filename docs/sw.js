@@ -4,7 +4,7 @@
       image in a cache, redirect to /?shared; the page picks it up. */
 "use strict";
 
-const SHELL = "sv-shell-v3";
+const SHELL = "sv-shell-v4";
 const SHARE = "sv-share-v1";
 const CORE = [
   "/", "/index.html",

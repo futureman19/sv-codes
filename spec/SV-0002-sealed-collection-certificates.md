@@ -43,7 +43,7 @@ The certificate is **canonical JSON**: keys sorted lexicographically, no insigni
 | `n` | int | – | vout of the ordinal within the mint tx. Default `0`; omit when 0. |
 | `art` | string | ✓ | First 8 bytes (16 hex) of SHA-256 of the canonical render (§6). Pins the reveal. |
 
-Example (215 bytes):
+Historical negative example (215 bytes): the original `mint` token below is 66 hex characters rather than 64. It is preserved verbatim as a rejection fixture, not a valid certificate. Use the real §9.1 vector for positive conformance.
 
 ```json
 {"art":"e64fc8981b2e5437","col":"grydbound-armory","ed":23,"item":"emberlong-sword","mint":"a91f3c2e7b04d5f6a91f3c2e7b04d5f6a91f3c2e7b04d5f6a91f3c2e7b04d5f6a9","of":500,"seed":"a91f3c","tr":{"blade":"molten"},"v":2}
@@ -143,7 +143,7 @@ A screenshot of a piece passes Scan and Anchor for the *original* — and fails 
 
 ## 9. Test vectors
 
-Vector 1 (historical schema-conformance example; not a live-chain receipt):
+Vector 1 (historical malformed-mint negative example; not a live-chain receipt):
 
 ```
 canonical cert (215 bytes):
@@ -152,11 +152,18 @@ canonical cert (215 bytes):
 SHA-256(cert)  = 43c8eb35b0c58e2888c603bcedee9924935aa1cccd5d335aded5e35edac59a25
 budget check   = 215 ≤ 227  PASS
 round-trip     = parse → re-serialize canonically → byte-identical  PASS
+schema check   = mint has 66 hex characters, not 64; MUST REJECT
 ```
 
 Implementations MUST round-trip: parse → re-serialize canonically → byte-identical.
 
 ### 9.1 First mainnet mint and independent round-trip receipt
+
+Positive canonical certificate vector (221 bytes):
+
+```json
+{"art":"921a9d57b3a474a9","col":"sv-genesis","ed":52,"item":"genesis-blade","mint":"f8200f6f3573ba4e19fa8f94727fa6d76ca89b587dcaec0b67190efe745cbaa9","of":100,"seed":"f8ef2a","tr":{"core":"ember","edge":"serrated"},"v":2}
+```
 
 - Collection `sv-genesis`, edition **52/100**, seed `f8ef2a`.
 - Transaction `f8200f6f3573ba4e19fa8f94727fa6d76ca89b587dcaec0b67190efe745cbaa9`, output 0: **1 satoshi** to `1FpHQ4VrLYGp1sLDNXs5Cxh3x8KE4opYgU`.
