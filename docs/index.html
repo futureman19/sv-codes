@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070912">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SV Scan">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <title>SV Codes — Machine-Native Visual Transaction Streaming</title>
 <meta name="description" content="SV Code is a machine-native visual matrix protocol that streams signed Bitcoin SV payloads to robots and edge devices — no internet required. Scan one with your phone, right here.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Crect width='8' height='8' fill='white'/%3E%3Crect width='2' height='2' fill='%2300ffff'/%3E%3Crect x='6' width='2' height='2' fill='%23ff00ff'/%3E%3Crect y='6' width='2' height='2' fill='%23ffff00'/%3E%3Crect x='6' y='6' width='2' height='2' fill='%23ff0000'/%3E%3Crect x='3' y='3' width='1' height='1' fill='black'/%3E%3Crect x='4' y='4' width='1' height='1' fill='black'/%3E%3C/svg%3E">
@@ -249,6 +256,10 @@ This text is wrapped in a signed BMP envelope, framed with CRC32, and fountain-s
           <button class="btn" id="imgPickBtn">Decode a screenshot</button>
           <span class="hint" id="imgPickStatus" style="margin-left:10px"></span>
         </div>
+        <div style="margin-top:8px" id="installRow" hidden>
+          <button class="btn" id="installBtn">Install the scanner app</button>
+          <span class="hint" style="margin-left:10px">home-screen icon + share images straight to it</span>
+        </div>
       </div>
     </div>
   </div>
@@ -352,6 +363,27 @@ This text is wrapped in a signed BMP envelope, framed with CRC32, and fountain-s
 <script src="js/encoder.js"></script>
 <script src="js/decoder.js"></script>
 <script src="js/scanner.js"></script>
+<script>
+/* PWA: service worker + install prompt */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+}
+let deferredInstall = null;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredInstall = e;
+  const row = document.getElementById("installRow");
+  if (row) row.hidden = false;
+});
+document.addEventListener("click", async (e) => {
+  if (e.target && e.target.id === "installBtn" && deferredInstall) {
+    deferredInstall.prompt();
+    await deferredInstall.userChoice.catch(() => null);
+    deferredInstall = null;
+    document.getElementById("installRow").hidden = true;
+  }
+});
+</script>
 <script>
 "use strict";
 const heroTx = SVEnc.makeBroadcaster(document.getElementById("heroCanvas"), () => {});

@@ -163,6 +163,24 @@ function boot(){
       if (e.dataTransfer.files && e.dataTransfer.files[0]) decodeImageFile(e.dataTransfer.files[0]);
     });
   }
+
+  /* OS share sheet handoff: sw.js stashed the shared image in a cache */
+  if (new URLSearchParams(location.search).get("shared") && window.caches){
+    (async () => {
+      try {
+        const cache = await caches.open("sv-share-v1");
+        const res = await cache.match("/__shared-image");
+        if (res){
+          const blob = await res.blob();
+          await cache.delete("/__shared-image");
+          statusEl.textContent = "shared image received";
+          decodeImageFile(blob);
+          document.getElementById("scan").scrollIntoView({behavior: "smooth"});
+        }
+      } catch (e) { /* no shared image — normal load */ }
+      history.replaceState(null, "", location.pathname);
+    })();
+  }
   function escapeHtml(s){ return s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 }
 document.addEventListener("DOMContentLoaded", boot);
