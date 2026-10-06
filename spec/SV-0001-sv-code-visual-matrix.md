@@ -7,7 +7,7 @@
 | **Status** | **Stable** (two independent encoders emit bit-identical frames; two independent decoders — Python `poc/` + browser JS `docs/js/` — pass the published test vectors) |
 | **Category** | Transport Specification (Bitcoin Machine Protocol) |
 | **Created** | 2026-10-05 |
-| **Requires** | BMP-0000 |
+| **Requires** | BMP-0000 ([bmp repo](https://github.com/futureman19/bmp)) |
 
 ---
 
