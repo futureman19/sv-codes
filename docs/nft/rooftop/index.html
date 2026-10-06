@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Night Districts #14 "Rooftop" — the seal as signature</title>
+<meta name="description" content="The SV seal shrinks to hanko scale — a small sticker in the corner of the print. Third sealed-artwork proof of concept.">
+<style>
+  :root { --bg:#070912; --panel:#0e1220; --ink:#e8eaf2; --dim:#9aa3b8; --rose:#c97f92; --cyan:#35f0ff; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.6 system-ui, sans-serif; }
+  a { color: var(--cyan); }
+  nav { padding: 18px 24px; display: flex; gap: 18px; align-items: baseline; border-bottom: 1px solid #1a2033; }
+  nav a.brand { font-weight: 700; letter-spacing: 2px; color: var(--ink); text-decoration: none; }
+  nav a { text-decoration: none; color: var(--dim); font-size: 14px; }
+  nav a:hover { color: var(--cyan); }
+  main { max-width: 1060px; margin: 0 auto; padding: 40px 20px 80px; }
+  .tag { color: var(--rose); font-size: 12px; letter-spacing: 3px; margin-bottom: 12px; }
+  h1 { font-size: clamp(26px, 4.5vw, 44px); line-height: 1.15; max-width: 800px; }
+  .sub { color: var(--dim); max-width: 720px; margin: 16px 0 36px; }
+  .hero { display: grid; grid-template-columns: 1fr 320px; gap: 28px; align-items: start; }
+  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
+  .hero img { width: 100%; image-rendering: pixelated; border: 1px solid #1a2033; border-radius: 6px; }
+  .card { background: var(--panel); border: 1px solid #1a2033; border-radius: 10px; padding: 20px; }
+  .rank { font-size: 13px; color: var(--rose); letter-spacing: 2px; margin-bottom: 10px; }
+  .traits div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #171d30; font-size: 14px; }
+  .traits div:last-child { border: none; }
+  .traits span:last-child { color: var(--dim); }
+  section { margin-top: 56px; }
+  h2 { font-size: 22px; margin-bottom: 14px; }
+  pre { background: #0a0e1a; border: 1px solid #1a2033; border-radius: 8px; padding: 18px; overflow-x: auto; font-size: 13px; color: #c8d0e4; }
+  .receipts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  @media (max-width: 720px) { .receipts { grid-template-columns: 1fr; } }
+  .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+  @media (max-width: 720px) { .cols { grid-template-columns: 1fr; } }
+  .cols .card h3 { font-size: 15px; margin-bottom: 8px; color: var(--rose); }
+  .cols .card p { font-size: 14px; color: var(--dim); }
+  table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #1a2033; }
+  th { color: var(--dim); font-weight: 500; font-size: 12px; letter-spacing: 1px; }
+  td b { color: var(--ink); }
+  footer { border-top: 1px solid #1a2033; padding: 24px; color: var(--dim); font-size: 13px; text-align: center; }
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="/">SV CODES</a>
+  <a href="/#broadcast">Broadcast</a>
+  <a href="/verify/">Verify</a>
+  <a href="/nft/">#12</a>
+  <a href="/nft/facade/">#13</a>
+  <a href="https://github.com/futureman19/sv-codes">GitHub</a>
+</nav>
+<main>
+  <div class="tag">SEALED ARTWORK · PROOF OF CONCEPT · NIGHT DISTRICTS · DIEGETIC TIER III</div>
+  <h1>The seal shrinks to a signature. The art takes the canvas back.</h1>
+  <p class="sub">Piece #12 wore its certificate as a billboard. #13 wove it into a facade. #14 stamps it in the corner like a <em>hanko</em> — the seal a printmaker presses onto a finished work. Two figures on a rooftop, fog rolling through the district, and in the distance: the amber grid of Facade #13. The certificate is 6% of the canvas and carries everything.</p>
+
+  <div class="hero">
+    <img src="../night-districts-14.png" alt="Night Districts #14 — Rooftop">
+    <div class="card traits">
+      <div class="rank">RARITY RANK 2 / 100 — SIGNED</div>
+      <div><span>Weather</span><span>Fog · 12%</span></div>
+      <div><span>District</span><span>Koenji · 7%</span></div>
+      <div><span>Palette</span><span>Steel-Rose · 6%</span></div>
+      <div><span>Sign</span><span>Hanko · 1% — legendary</span></div>
+      <div><span>Edition</span><span>#14 of 100</span></div>
+    </div>
+  </div>
+
+  <section>
+    <h2>What the hanko says</h2>
+    <pre>{
+  "collection": "night-districts",
+  "piece": 14,
+  "supply": 100,
+  "traits": {"weather":"fog","district":"koenji",
+             "palette":"steel-rose","sign":"hanko"},
+  "rarity_rank": 2,
+  "art": "837766ef1d8d532e"
+}</pre>
+    <p class="sub" style="margin-top:10px">Signed by the studio key (demo): <code>038e2cb0…6538</code> · action <code>0xA47C</code> · target <code>NFT1</code>. Zoom into the corner and scan it with the <a href="/#broadcast">scanner</a>.</p>
+  </section>
+
+  <section>
+    <h2>How small can an SV Code get? — measured, not theorized</h2>
+    <p class="sub" style="margin:0 0 6px">We rendered the same signed certificate at shrinking cell sizes and ran the full decode chain (anchors → fountain solve → envelope → ECDSA) after real-world abuse: noisy backgrounds, JPEG recompression at quality 80/70/60.</p>
+    <table>
+      <tr><th>Seal size (on a 1024px image)</th><th>Cell pitch</th><th>PNG</th><th>JPEG q80</th><th>JPEG q60</th></tr>
+      <tr><td><b>128 × 128 px</b> — 1.5% of canvas</td><td>2 px</td><td>VALID</td><td>VALID</td><td>VALID</td></tr>
+      <tr><td><b>256 × 256 px</b> — this piece</td><td>4 px</td><td>VALID</td><td>VALID</td><td>VALID</td></tr>
+      <tr><td><b>384 × 384 px</b></td><td>6 px</td><td>VALID</td><td>VALID</td><td>VALID</td></tr>
+    </table>
+    <p class="sub" style="margin-top:10px">The digital floor is <b>128px</b> — a postage stamp. We ship at 256px so a phone can also scan it off a screen. For physical print, the floor is set by the camera, not the file: the sticker campaign prints at ~300&nbsp;px/inch.</p>
+  </section>
+
+  <section>
+    <h2>Verified by two independent implementations</h2>
+    <div class="receipts">
+      <div class="card">
+        <h3 style="font-size:15px;margin-bottom:8px;color:var(--rose)">Python reference decoder</h3>
+        <pre>[png] sig: VALID  cert: MATCH
+[jpg] sig: VALID  cert: MATCH
+lsb shard: OK (101 bytes)</pre>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px;margin-bottom:8px;color:var(--rose)">JavaScript site decoder</h3>
+        <pre>9 passed, 0 failed
+signature VALID · action 0xA47C
+target NFT1 · traits ✓ · art hash ✓</pre>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="tag">THE SERIES SO FAR</div>
+    <h2>One certificate, three hiding depths</h2>
+    <div class="cols">
+      <div class="card"><h3>#12 Alley — billboard</h3><p>The seal as the scene's centerpiece neon sign. Loud by design: the hanko philosophy, unmissable. <a href="/nft/">View →</a></p></div>
+      <div class="card"><h3>#13 Facade — texture</h3><p>The seal as a skyscraper's lit windows, palette-shifted amber-on-navy. Casual viewers see a building; sharp eyes see a grid. <a href="/nft/facade/">View →</a></p></div>
+      <div class="card"><h3>#14 Rooftop — signature</h3><p>The seal as a corner stamp, 6% of the canvas. The art is just art; the signature is the certificate. Plus shard 2 of 3 hidden in the bits.</p></div>
+    </div>
+    <p class="sub" style="margin-top:14px">The shard trail: <code>#13 facade</code> carried shard 1 — <em>"the other two signs hang elsewhere in the district"</em>. This piece carries shard 2 — <em>"one sign remains: it blooms, it does not hang"</em>. The third piece completes the set.</p>
+  </section>
+</main>
+<footer>SV Codes — sealed artwork concept · generator: <a href="https://github.com/futureman19/sv-codes/blob/main/poc/make_nft_night_rooftop.py">source</a> · series: <a href="/nft/">#12</a> · <a href="/nft/facade/">#13</a></footer>
+</body>
+</html>
