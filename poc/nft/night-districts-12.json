@@ -1,0 +1,23 @@
+{
+  "title": "Night Districts #12",
+  "artist_pubkey": "038e2cb0ea841f2975ef15d762653ea481f6bc076bcb2683d21a8dc0bc5a486538",
+  "target_id": "0x4E465431",
+  "action": "0xA47C",
+  "payload_len": 191,
+  "K": 9,
+  "seed": 0,
+  "cert": {
+    "collection": "night-districts",
+    "piece": 12,
+    "supply": 100,
+    "traits": {
+      "weather": "rain",
+      "district": "shibuya",
+      "palette": "cyan-magenta",
+      "sign": "flickering"
+    },
+    "rarity_rank": 9,
+    "art": "24d307a34bdcd3fc"
+  },
+  "final_png": "night-districts-12.png"
+}
