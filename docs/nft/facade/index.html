@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Night Districts #13 "Facade" — the building is the certificate</title>
+<meta name="description" content="A skyscraper whose lit windows encode a signed SV-0001 certificate. Second sealed-artwork proof of concept.">
+<style>
+  :root { --bg:#070912; --panel:#0e1220; --ink:#e8eaf2; --dim:#9aa3b8; --amber:#ffb24a; --cyan:#35f0ff; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.6 system-ui, sans-serif; }
+  a { color: var(--cyan); }
+  nav { padding: 18px 24px; display: flex; gap: 18px; align-items: baseline; border-bottom: 1px solid #1a2033; }
+  nav a.brand { font-weight: 700; letter-spacing: 2px; color: var(--ink); text-decoration: none; }
+  nav a { text-decoration: none; color: var(--dim); font-size: 14px; }
+  nav a:hover { color: var(--cyan); }
+  main { max-width: 1060px; margin: 0 auto; padding: 40px 20px 80px; }
+  .tag { color: var(--amber); font-size: 12px; letter-spacing: 3px; margin-bottom: 12px; }
+  h1 { font-size: clamp(26px, 4.5vw, 44px); line-height: 1.15; max-width: 800px; }
+  .sub { color: var(--dim); max-width: 720px; margin: 16px 0 36px; }
+  .hero { display: grid; grid-template-columns: 1fr 320px; gap: 28px; align-items: start; }
+  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
+  .hero img { width: 100%; image-rendering: pixelated; border: 1px solid #1a2033; border-radius: 6px; }
+  .card { background: var(--panel); border: 1px solid #1a2033; border-radius: 10px; padding: 20px; }
+  .rank { font-size: 13px; color: var(--amber); letter-spacing: 2px; margin-bottom: 10px; }
+  .traits div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #171d30; font-size: 14px; }
+  .traits div:last-child { border: none; }
+  .traits span:last-child { color: var(--dim); }
+  section { margin-top: 56px; }
+  h2 { font-size: 22px; margin-bottom: 14px; }
+  pre { background: #0a0e1a; border: 1px solid #1a2033; border-radius: 8px; padding: 18px; overflow-x: auto; font-size: 13px; color: #c8d0e4; }
+  .receipts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  @media (max-width: 720px) { .receipts { grid-template-columns: 1fr; } }
+  .ok { color: #58e6a4; font-weight: 600; }
+  .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+  @media (max-width: 720px) { .cols { grid-template-columns: 1fr; } }
+  .cols .card h3 { font-size: 15px; margin-bottom: 8px; color: var(--amber); }
+  .cols .card p { font-size: 14px; color: var(--dim); }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .pair img { width: 100%; image-rendering: pixelated; border: 1px solid #1a2033; border-radius: 6px; }
+  .pair p { font-size: 13px; color: var(--dim); margin-top: 6px; }
+  footer { border-top: 1px solid #1a2033; padding: 24px; color: var(--dim); font-size: 13px; text-align: center; }
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="/">SV CODES</a>
+  <a href="/#broadcast">Broadcast</a>
+  <a href="/verify/">Verify</a>
+  <a href="/nft/">#12 Alley</a>
+  <a href="https://github.com/futureman19/sv-codes">GitHub</a>
+</nav>
+<main>
+  <div class="tag">SEALED ARTWORK · PROOF OF CONCEPT · NIGHT DISTRICTS · CAMOUFLAGE TIER II</div>
+  <h1>The lit windows of this skyscraper <em>are</em> the certificate.</h1>
+  <p class="sub">Piece #12 hid the seal in a neon sign. Piece #13 goes one level deeper: the tower's window grid itself is a palette-shifted SV-0001 matrix — amber-on-navy instead of black-on-white, because the decoder thresholds on luminance, not color. The four corner beacons are the anchors. And a 104-byte treasure shard hides invisibly in the PNG's least-significant bits.</p>
+
+  <div class="hero">
+    <img src="../night-districts-13.png" alt="Night Districts #13 — Facade">
+    <div class="card traits">
+      <div class="rank">RARITY RANK 4 / 100 — SIGNED</div>
+      <div><span>Weather</span><span>Clear · 74%</span></div>
+      <div><span>District</span><span>Shinjuku · 9%</span></div>
+      <div><span>Palette</span><span>Amber-Gold · 11%</span></div>
+      <div><span>Sign</span><span>Window-Grid · 3%</span></div>
+      <div><span>Edition</span><span>#13 of 100</span></div>
+    </div>
+  </div>
+
+  <section>
+    <h2>What the windows say</h2>
+    <pre>{
+  "collection": "night-districts",
+  "piece": 13,
+  "supply": 100,
+  "traits": {"weather":"clear","district":"shinjuku",
+             "palette":"amber-gold","sign":"window-grid"},
+  "rarity_rank": 4,
+  "art": "3516a550d162f02e"
+}</pre>
+    <p class="sub" style="margin-top:10px">Signed by the studio key (demo): <code>038e2cb0…6538</code> · action <code>0xA47C</code> (ART CERT) · target <code>NFT1</code>. Decode it yourself with the <a href="/#broadcast">scanner</a>.</p>
+  </section>
+
+  <section>
+    <h2>Verified by two independent implementations</h2>
+    <div class="receipts">
+      <div class="card">
+        <h3 style="font-size:15px;margin-bottom:8px;color:var(--amber)">Python reference decoder</h3>
+        <pre>[png] sig: VALID  cert: MATCH
+[jpg] sig: VALID  cert: MATCH
+lsb shard: OK (104 bytes)</pre>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px;margin-bottom:8px;color:var(--amber)">JavaScript site decoder</h3>
+        <pre>9 passed, 0 failed
+signature VALID · action 0xA47C
+target NFT1 · traits ✓ · art hash ✓</pre>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:10px">The JPEG is the Instagram test: recompressed at quality 80, the certificate still decodes byte-exact. The LSB shard survives only as PNG — recompression erases it, which is exactly the hunter/viewer split.</p>
+    <div class="pair">
+      <div><img src="../night-districts-13_base.png" alt="The cityscape without its certificate"><p>The city underneath — hash <code>3516a550d162f02e</code></p></div>
+      <div><img src="../night-districts-13.png" alt="The sealed artwork"><p>The sealed artwork — the windows carry the signed cert</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="tag">HONEST NOTES ON HIDING A CODE</div>
+    <h2>How hidden can a scannable code get?</h2>
+    <div class="cols">
+      <div class="card"><h3>Tier I — Billboard (#12)</h3><p>The code is the scene's centerpiece. Impossible to miss, trivial to scan, works after any recompression. Loud by design — the seal as a hanko stamp.</p></div>
+      <div class="card"><h3>Tier II — Texture (this piece)</h3><p>The code becomes a texture: lit windows, palette-shifted into the scene. A casual viewer sees a building; an attentive one spots the grid. Physics sets the floor: 2,704 binary cells will always read as <em>some</em> pattern.</p></div>
+      <div class="card"><h3>Tier III — Stego (the shard)</h3><p>Truly invisible: 104 bytes in the PNG's least-significant bits. Not camera-scannable — hunters extract it with tools. Dies under JPEG. This is where prizes live.</p></div>
+    </div>
+    <p class="sub" style="margin-top:14px">Next tier, untested: <strong>diegetic shrink</strong> — the seal as a small poster or sticker inside a pure-art scene, where "a poster with a funky design" hides in plain sight.</p>
+  </section>
+
+  <section>
+    <div class="tag">WHY THIS MATTERS</div>
+    <h2>Two channels, one artwork</h2>
+    <div class="cols">
+      <div class="card"><h3>1 · For everyone</h3><p>Point a phone at the building: collection, edition, traits, rarity, artist signature. No spreadsheet, no metadata server, no marketplace API.</p></div>
+      <div class="card"><h3>2 · For hunters</h3><p>The LSB shard is the first of three: <code>"shard 1 of 3 · facade-13 · the other two signs hang elsewhere in the district"</code>. Three pieces, three shards, one prize.</p></div>
+      <div class="card"><h3>3 · Forever</h3><p>The cert verifies offline against math, and ownership verifies online against the chain. Copies of the file are self-labeling posters, not stolen originals.</p></div>
+    </div>
+  </section>
+</main>
+<footer>SV Codes — sealed artwork concept · generator: <a href="https://github.com/futureman19/sv-codes/blob/main/poc/make_nft_night_facade.py">source</a> · series: <a href="/nft/">#12 Alley</a></footer>
+</body>
+</html>
