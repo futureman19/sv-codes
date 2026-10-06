@@ -11,7 +11,7 @@ const S = (typeof module !== "undefined") ? require("./svc.js") : SVC;
 function classify(r, g, b){
   const max = Math.max(r, g, b), min = Math.min(r, g, b);
   const d = max - min;
-  if (d < 52) return -1;                       // S < ~80 (204/255) -> not anchor
+  if (d * 255 < 204 * max) return -1;          // S < 204/255 -> not anchor (matches Python)
   if (max < 204) return -1;                    // V < 80%
   let h;
   if (max === r)      h = 30 * (((g - b) / d) % 6);

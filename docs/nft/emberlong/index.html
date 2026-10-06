@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emberlong Sword — the sealed in-game item</title>
+<meta name="description" content="A game item whose render carries its own signed certificate: stats, edition, traits, mint pointer. Two presentations, one certificate, both fully decodable.">
+<style>
+  :root { --bg:#070912; --panel:#0e1220; --ink:#e8eaf2; --dim:#9aa3b8; --gold:#a88a4a; --cyan:#35f0ff; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.6 system-ui, sans-serif; }
+  a { color: var(--cyan); }
+  nav { padding: 18px 24px; display: flex; gap: 18px; align-items: baseline; border-bottom: 1px solid #1a2033; flex-wrap: wrap; }
+  nav a.brand { font-weight: 700; letter-spacing: 2px; color: var(--ink); text-decoration: none; }
+  nav a { text-decoration: none; color: var(--dim); font-size: 14px; }
+  nav a:hover { color: var(--cyan); }
+  main { max-width: 1060px; margin: 0 auto; padding: 40px 20px 80px; }
+  .tag { color: var(--gold); font-size: 12px; letter-spacing: 3px; margin-bottom: 12px; }
+  h1 { font-size: clamp(26px, 4.5vw, 44px); line-height: 1.15; max-width: 820px; }
+  .sub { color: var(--dim); max-width: 720px; margin: 16px 0 36px; }
+  .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 720px) { .hero { grid-template-columns: 1fr; } }
+  .hero img { width: 100%; image-rendering: pixelated; border: 1px solid #1a2033; border-radius: 6px; }
+  .hero p { font-size: 13px; color: var(--dim); margin-top: 8px; }
+  .card { background: var(--panel); border: 1px solid #1a2033; border-radius: 10px; padding: 20px; }
+  section { margin-top: 56px; }
+  h2 { font-size: 22px; margin-bottom: 14px; }
+  pre { background: #0a0e1a; border: 1px solid #1a2033; border-radius: 8px; padding: 18px; overflow-x: auto; font-size: 13px; color: #c8d0e4; }
+  .receipts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  @media (max-width: 720px) { .receipts { grid-template-columns: 1fr; } }
+  .cols { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; }
+  @media (max-width: 720px) { .cols { grid-template-columns: 1fr; } }
+  .cols .card h3 { font-size: 15px; margin-bottom: 8px; color: var(--gold); }
+  .cols .card p { font-size: 14px; color: var(--dim); }
+  footer { border-top: 1px solid #1a2033; padding: 24px; color: var(--dim); font-size: 13px; text-align: center; }
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="/">SV CODES</a>
+  <a href="/#broadcast">Broadcast</a>
+  <a href="/verify/">Verify</a>
+  <a href="/nft/">#12</a>
+  <a href="/nft/facade/">#13</a>
+  <a href="/nft/rooftop/">#14</a>
+  <a href="/nft/bonsai/">#15</a>
+  <a href="https://github.com/futureman19/sv-codes">GitHub</a>
+</nav>
+<main>
+  <div class="tag">SEALED IN-GAME ITEM · GRYDBOUND ARMORY · PROOF OF CONCEPT</div>
+  <h1>The item render is its own certificate. The screenshot is the receipt.</h1>
+  <p class="sub">One signed certificate — item, stats, edition, traits, mint pointer, asset hash — presented two ways. <b>Standard</b>: a normal item card with the bare corner seal (the Sealed Signature standard). <b>Legendary</b>: the certificate woven into the blade as a glowing rune inscription with four gem anchors. Both decode to the <b>identical bytes</b>.</p>
+
+  <div class="hero">
+    <div>
+      <img src="../emberlong-standard.png" alt="Emberlong Sword — standard item card with corner seal">
+      <p><b>Standard</b> — the seal signs the corner; the card is just a card. This is the default.</p>
+    </div>
+    <div>
+      <img src="../emberlong-legendary.png" alt="Emberlong Sword — legendary rune-blade presentation">
+      <p><b>Legendary</b> — the runes on the blade ARE the certificate. Works cryptographically; reads as a code to a sharp eye. See the honest note below.</p>
+    </div>
+  </div>
+
+  <section>
+    <h2>What the seal says</h2>
+    <pre>{
+  "game": "grydbound",
+  "item": "emberlong-sword",
+  "edition": 23, "supply": 500,
+  "stats": {"atk": 47, "spd": 12, "seed": "a91f3c"},
+  "traits": {"blade": "molten", "guard": "obsidian"},
+  "mint": "a91f3c2e",
+  "art": "e64fc8981b2e5437"
+}</pre>
+    <p class="sub" style="margin-top:10px">Signed by the armory key (demo): action <code>0x17E9</code> (GAME ITEM) · target <code>GRYD</code>. Scan either card with the <a href="/#broadcast">scanner</a>.</p>
+  </section>
+
+  <section>
+    <h2>Why games want this</h2>
+    <div class="cols">
+      <div class="card"><h3>Trade-window scam killer</h3><p>The classic MMO scam: link one item, swap another into the trade. If the trade preview carries the seal, a swapped item's cert no longer matches — visible to anyone, no server call.</p></div>
+      <div class="card"><h3>Streams become scannable</h3><p>SV's fountain mode was built for video. A viewer can scan a rare drop off a VOD and verify it's real. No other visual code does this.</p></div>
+      <div class="card"><h3>UGC credit that travels</h3><p>A creator's signed seal rides every render of their item — screenshots, marketplaces, wikis. Attribution survives reposting.</p></div>
+      <div class="card"><h3>Scan-to-claim drops</h3><p>The seal can carry a capability, not just provenance: scan the sword in the trailer, claim it in-game (HTLC mechanics from the treasure design). Marketing → ownership, no signup.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Verified by two independent implementations</h2>
+    <div class="receipts">
+      <div class="card">
+        <h3 style="font-size:15px;margin-bottom:8px;color:var(--gold)">Python reference decoder</h3>
+        <pre>[standard.png]  sig: VALID  cert: MATCH
+[standard.jpg]  sig: VALID  cert: MATCH
+[legendary.png] sig: VALID  cert: MATCH
+[legendary.jpg] sig: VALID  cert: MATCH</pre>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px;margin-bottom:8px;color:var(--gold)">JavaScript site decoder — 17 checks</h3>
+        <pre>17 passed, 0 failed
+both presentations: sig VALID · action 0x17E9
+target GRYD · stats ✓ · art hash ✓
+<b>both carry the IDENTICAL certificate bytes</b></pre>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="tag">HONEST NOTE — THE CAMOUFLAGE CEILING</div>
+    <h2>The legendary version proves the standard's point</h2>
+    <p class="sub" style="margin:0">Four iterations of blade anatomy later: the rune panel decodes perfectly and still <em>reads as a code</em> to a trained eye — 2,704 binary cells plus four pure-hue corner anchors will always pattern-match as machine-made. That is exactly why the corner signature is the standard: <b>the seal doesn't blend, it signs.</b> Legendary-tier weavings stay for collectors who <em>want</em> the code visible as the feature. Building this mock also flushed out two real site-scanner bugs — a saturation gate 4× too weak (warm artwork polluted the yellow anchor channel and shifted the homography) and an area floor that missed 128px seals. Both fixed, all suites green, fixes live on svcode.org.</p>
+  </section>
+</main>
+<footer>SV Codes × Grydbound — sealed item concept · generator: <a href="https://github.com/futureman19/sv-codes/blob/main/poc/make_gryd_emberlong.py">source</a> · series: <a href="/nft/">#12</a> · <a href="/nft/facade/">#13</a> · <a href="/nft/rooftop/">#14</a> · <a href="/nft/bonsai/">#15</a></footer>
+</body>
+</html>
