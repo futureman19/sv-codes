@@ -17,6 +17,8 @@ A sealed collection is a series of collectibles whose **artwork is the SV Code i
 
 Ownership is **never** embedded in the image or in a transferable private key. Ownership lives on-chain as a 1-satoshi ordinal UTXO created at mint. Claiming a piece is a wallet-signed on-chain event; transferring it is an ordinary ordinal send. The image, the certificate, and the ownership ledger are three views of one fact.
 
+Certificates are **game-agnostic**. Any number of games may recognize, render, and honor the same item simultaneously (§7), while ownership remains an exclusive on-chain fact enforced by the ordinal. This is what makes a sealed collection a *standard* rather than a game asset.
+
 ## 2. Design principles
 
 1. **Identity ≠ ownership.** A piece's identity (what it is) is fixed forever in its signed certificate. Its ownership (who holds it) is a chain-state fact that changes with transfers. Conflating the two is what makes naive "key in the image" designs fail.
@@ -99,7 +101,33 @@ Scanning produces the certificate; rendering produces the item's appearance:
 
 The SV Code artwork itself MAY embed any per-cell tone art (picture-in-matrix, per the Night Districts series) — such artwork is presentation and MUST NOT be required for decoding or verification.
 
-## 7. Verification tiers for collectibles
+## 7. Cross-game recognition
+
+**Recognition is unlimited; ownership is exclusive.** This is the rule that makes a sealed collection a game standard rather than a game asset.
+
+### 7.1 Recognition is free
+
+A certificate contains no game-specific code. Any game MAY honor any SV-0002 certificate by:
+
+1. Decoding the SV Code and verifying the issuer signature (Scan tier, §8).
+2. Resolving the current owner by tracing `mint:n` (Owner tier, §8).
+3. Rendering the item in its own engine from `(item, seed)` and mapping traits (§7.2).
+
+No permission from the issuer is required, in either direction. Adopting this specification as an **issuer** consists of: choosing a 4-byte `target_id` namespace, signing certificates with the studio key, and publishing item generators. Honoring **foreign** collections consists of the three steps above and nothing else.
+
+### 7.2 Trait and stat normalization
+
+Honoring games map foreign traits onto their own item classes. Consumers MUST ignore trait keys they do not implement (§10) — a `molten` blade may read as fire damage in one engine and be purely cosmetic in another. `art` pins only the **issuer's** canonical render; honoring games derive their own renders from `(item, seed)` and are not bound by `art`. Numeric stats carried in traits are advisory: each game's balance is sovereign over its own world.
+
+### 7.3 Simultaneity is a feature
+
+The same item may be active in every honoring game at once — utility is recognition, not consumption. When the ordinal transfers, every honoring game reflects the new owner on its next Owner-tier check; there is no per-game transfer ceremony. Games SHOULD re-resolve ownership on item use and MUST NOT cache ownership across sessions.
+
+### 7.4 Optional activation lock (informative)
+
+Economies that cannot tolerate simultaneous utility (yield-bearing items, consumables) MAY require an on-chain activation lock: the owner spends the ordinal back to themselves with `OP_RETURN: SV2L ‖ game target_id ‖ SHA-256(cert)`. Honoring games treat the item as inactive unless the latest lock record names them (unlock: same pattern with `target_id` zero). This extension is deliberately excluded from the core spec — it adds friction to every transfer, and most collections SHOULD NOT use it.
+
+## 8. Verification tiers for collectibles
 
 | Tier | Check | Answers |
 |---|---|---|
@@ -109,7 +137,7 @@ The SV Code artwork itself MAY embed any per-cell tone art (picture-in-matrix, p
 
 A screenshot of a piece passes Scan and Anchor for the *original* — and fails Owner for the screenshotter. That asymmetry is the product.
 
-## 8. Test vectors
+## 9. Test vectors
 
 Vector 1 (schema conformance; mint is a placeholder pending first real mint):
 
@@ -124,7 +152,7 @@ round-trip     = parse → re-serialize canonically → byte-identical  PASS
 
 Implementations MUST round-trip: parse → re-serialize canonically → byte-identical.
 
-## 9. Reserved
+## 10. Reserved
 
 - The 104-bit Reserved tail of the SV-0001 frame remains zero for collection frames.
 - Trait value `tr.lock` is RESERVED for future launch-enforcement flags; consumers MUST ignore unknown trait keys.
