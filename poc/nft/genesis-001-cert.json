@@ -1,0 +1,28 @@
+{
+  "cert": {
+    "art": "2985a151265ec200",
+    "col": "sv-genesis",
+    "ed": 1,
+    "item": "genesis-blade",
+    "mint": "0000000000000000000000000000000000000000000000000000000000000000",
+    "of": 100,
+    "seed": "a91f3c",
+    "tr": {
+      "core": "umbral",
+      "edge": "wave"
+    },
+    "v": 2
+  },
+  "cert_sha256": "b69e6450d39011f57de18664416ebb4b4032e4943663691ea6e836be4defc55a",
+  "issuer_pub": "023a6f32a0528c1b02899c3dbd28cd055fa64ca626271578da4b4261076407a11d",
+  "action": 42108,
+  "target_id": 1195724337,
+  "reveal_params": {
+    "form": "bastard",
+    "edge": "wave",
+    "core": "umbral",
+    "guard": "straight",
+    "length": 0.6686666666666667,
+    "glow": 0.7915686274509804
+  }
+}
