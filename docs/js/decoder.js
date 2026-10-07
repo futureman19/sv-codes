@@ -25,8 +25,10 @@ function classify(r, g, b){
   return -1;
 }
 
-/* Find anchor centroids in RGBA image data. Returns [tl,tr,bl,br] or null. */
-function findAnchors(data, width, height){
+/* Find anchor centroids + hue-mask areas in RGBA image data.
+   Areas are rotation-invariant, so they give the cell pitch even for
+   rotated grids — that is how the grid size (64 vs 96) is inferred. */
+function anchorStats(data, width, height){
   const sumX = [0,0,0,0], sumY = [0,0,0,0], cnt = [0,0,0,0];
   const step = 2;                              // sample every 2nd pixel for speed
   for (let y = 0; y < height; y += step){
@@ -38,12 +40,53 @@ function findAnchors(data, width, height){
     }
   }
   const minArea = Math.max(12, (width * height) / (step * step) * 0.00005);
-  const out = [];
+  const pts = [], areas = [];
   for (let c = 0; c < 4; c++){
     if (cnt[c] < minArea) return null;
-    out.push([sumX[c] / cnt[c], sumY[c] / cnt[c]]);
+    pts.push([sumX[c] / cnt[c], sumY[c] / cnt[c]]);
+    areas.push(cnt[c] * step * step);
   }
-  return out;
+  return {pts, areas};
+}
+
+/* Find anchor centroids in RGBA image data. Returns [tl,tr,bl,br] or null. */
+function findAnchors(data, width, height){
+  const s = anchorStats(data, width, height);
+  return s ? s.pts : null;
+}
+
+/* Grid configurations: SV-0001 (64) and SV-0005 QR-inlay (96). */
+const GRIDS = {
+  64: { GRID: 64, INNER: 52, OFFSET: 6, FRAME_BITS: 2704, inlay: null },
+  96: { GRID: 96, INNER: 84, OFFSET: 6, FRAME_BITS: 40 + 24 * 256,
+        inlay: { cells: 29, origin: 27 } },   // canonical SV-0005 inlay
+};
+function gridFor(areas, pts){
+  let pitch = 0;
+  for (const a of areas) pitch += Math.sqrt(a / 16);   // anchor = 4x4 cells
+  pitch /= 4;
+  if (!(pitch > 0)) return null;
+  const spanX = Math.hypot(pts[1][0] - pts[0][0], pts[1][1] - pts[0][1]);
+  const spanY = Math.hypot(pts[2][0] - pts[0][0], pts[2][1] - pts[0][1]);
+  const est = ((spanX + spanY) / 2) / pitch + 4;       // span = (GRID-4)*pitch
+  let best = null, bd = 1e9;
+  for (const g of [64, 96]){ const d = Math.abs(est - g); if (d < bd){ bd = d; best = g; } }
+  return bd <= 6 ? GRIDS[best] : null;
+}
+/* Confidence-scored grid selection: sample the frame under BOTH candidate
+   grids and keep the one whose cell means are more bipolar. The true grid
+   lands each sample inside one printed cell (means near the rails); the
+   wrong grid straddles cells (means mid-gray). Immune to anchor shape art
+   (circular gem anchors defeat area-based pitch estimates). */
+function gridConfidence(means){
+  let mLo = 255, mHi = 0;
+  for (const m of means){ if (m < mLo) mLo = m; if (m > mHi) mHi = m; }
+  const span = mHi - mLo;
+  if (span < 40) return {conf: -1, mLo, mHi};          // no contrast
+  const theta = (mLo + mHi) / 2;
+  let acc = 0;
+  for (const m of means) acc += Math.min(1, Math.abs(m - theta) / (0.25 * span));
+  return {conf: acc / means.length, mLo, mHi};
 }
 
 /* 4-point homography (DLT, h33 = 1): canonical cell coords -> image pixels */
@@ -86,54 +129,61 @@ function gray(data, width, x, y){
   return 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
 }
 
-/* Full frame decode: RGBA data -> 2704-bit payload matrix, or null */
+/* Full frame decode: RGBA data -> payload bits (2,704 for SV-0001 grids,
+   6,184 for SV-0005 inlay grids), or null. Grid size is inferred from the
+   anchor pitch; inlay cells are skipped per the canonical SV-0005 layout. */
 function decodeImageData(data, width, height){
-  const anchors = findAnchors(data, width, height);
-  if (!anchors) return null;
-  // canonical anchor centers in cell units: (2,2) (62,2) (2,62) (62,62)
-  const canonical = [[2,2],[62,2],[2,62],[62,62]];
-  const H = solveHomography(canonical, anchors);
-  if (!H) return null;
+  const st = anchorStats(data, width, height);
+  if (!st) return null;
 
-  const {INNER, OFFSET, FRAME_BITS} = S;
-  // pass 1: center grays for adaptive threshold
-  const centers = new Float32Array(FRAME_BITS);
-  let lo = 255, hi = 0;
-  for (let i = 0; i < FRAME_BITS; i++){
-    const r = OFFSET + Math.floor(i / INNER), c = OFFSET + (i % INNER);
-    const [X, Y] = applyH(H, c + 0.5, r + 0.5);
-    const g = gray(data, width, X, Y);
-    centers[i] = g; if (g < lo) lo = g; if (g > hi) hi = g;
-  }
-  const theta = (lo + hi) / 2;
-  if (hi - lo < 40) return null;               // no contrast -> not a grid
-  // pass 2: block-averaged sampling — 4x4 sub-samples within the central 50%
-  // of each cell, then a global Otsu threshold on the 2,704 cell means.
-  // (Matches the Python decoder's noise immunity: area averaging + Otsu,
-  // not 5 point samples + midpoint threshold.)
+  // block-averaged sampling (4x4 sub-samples, central 50% of each cell)
   const SUB = [-0.225, -0.075, 0.075, 0.225];
-  const means = new Float32Array(FRAME_BITS);
-  for (let i = 0; i < FRAME_BITS; i++){
-    const r = OFFSET + Math.floor(i / INNER), c = OFFSET + (i % INNER);
-    let acc = 0;
-    for (const dy of SUB) for (const dx of SUB){
-      const [X, Y] = applyH(H, c + 0.5 + dx, r + 0.5 + dy);
-      acc += gray(data, width, X, Y);
+  function sampleCells(cfg){
+    const canonical = [[2,2],[cfg.GRID-2,2],[2,cfg.GRID-2],[cfg.GRID-2,cfg.GRID-2]];
+    const H = solveHomography(canonical, st.pts);
+    if (!H) return null;
+    const cells = [];
+    if (!cfg.inlay){
+      for (let i = 0; i < cfg.FRAME_BITS; i++)
+        cells.push([cfg.OFFSET + Math.floor(i / cfg.INNER), cfg.OFFSET + (i % cfg.INNER)]);
+    } else {
+      const o = cfg.inlay.origin, n = cfg.inlay.cells;
+      outer: for (let r = 0; r < cfg.INNER; r++){
+        for (let c = 0; c < cfg.INNER; c++){
+          if (r >= o && r < o + n && c >= o && c < o + n) continue;
+          cells.push([cfg.OFFSET + r, cfg.OFFSET + c]);
+          if (cells.length === cfg.FRAME_BITS) break outer;
+        }
+      }
     }
-    means[i] = acc / 16;
+    const means = new Float32Array(cells.length);
+    for (let i = 0; i < cells.length; i++){
+      const [r, c] = cells[i];
+      let acc = 0;
+      for (const dy of SUB) for (const dx of SUB){
+        const [X, Y] = applyH(H, c + 0.5 + dx, r + 0.5 + dy);
+        acc += gray(data, width, X, Y);
+      }
+      means[i] = acc / 16;
+    }
+    return means;
   }
-  // Otsu is wrong here: picture-in-matrix art is MULTI-modal (soft inks and
-  // tints sit between field and ink), and Otsu splits the biggest cluster.
-  // The format contract pins the extremes instead: bit-1 ink is the darkest
-  // tone, the payload field is the lightest — so threshold at their midpoint.
-  let mLo = 255, mHi = 0;
-  for (let i = 0; i < FRAME_BITS; i++){
-    if (means[i] < mLo) mLo = means[i];
-    if (means[i] > mHi) mHi = means[i];
+
+  // try both grids; the true one reads near the rails (midpoint-of-extremes
+  // threshold — Otsu splits multi-modal art and is banned by the format contract)
+  let best = null;
+  for (const g of [64, 96]){
+    const cfg = GRIDS[g];
+    const means = sampleCells(cfg);
+    if (!means) continue;
+    const {conf, mLo, mHi} = gridConfidence(means);
+    if (best && conf <= best.conf) continue;
+    best = {conf, means, mLo, mHi, n: means.length};
   }
-  const thetaB = (mLo + mHi) / 2;
-  const bits = new Uint8Array(FRAME_BITS);
-  for (let i = 0; i < FRAME_BITS; i++) bits[i] = means[i] < thetaB ? 1 : 0;
+  if (!best || best.conf < 0.6) return null;
+  const thetaB = (best.mLo + best.mHi) / 2;
+  const bits = new Uint8Array(best.n);
+  for (let i = 0; i < best.n; i++) bits[i] = best.means[i] < thetaB ? 1 : 0;
   return bits;
 }
 
@@ -149,11 +199,11 @@ class StreamScanner {
     this.lastK = null;
   }
   feedBits(bits){
-    const {seed, ctype, K, symbols} = S.unpackFrame(bits);
+    const {seed, ctype, K, symbols} = S.unpackFrameAuto(bits);
     this.framesSeen++; this.lastK = K;
     if (!this.lts.has(K)) this.lts.set(K, new S.LTDecoder(K));
     const lt = this.lts.get(K);
-    for (let slot = 0; slot < 10; slot++){
+    for (let slot = 0; slot < symbols.length; slot++){
       const sym = symbols[slot];
       if (sym.every(b => b === 0)) continue;
       if (lt.add(seed, slot, sym)){
@@ -191,6 +241,6 @@ function concatBytes(arrs){
   return out;
 }
 
-return { classify, findAnchors, solveHomography, applyH, decodeImageData, StreamScanner };
+return { classify, findAnchors, anchorStats, gridFor, solveHomography, applyH, decodeImageData, StreamScanner };
 })();
 if (typeof module !== "undefined") module.exports = SVDec;

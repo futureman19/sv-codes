@@ -371,6 +371,26 @@ function unpackFrame(bits){
   return {seed, ctype, K, symbols};
 }
 
+/* ---------- inlay frame (SV-0005): 96x96 grid, center QR inlay ---------- */
+const INLAY_GRID = 96, INLAY_INNER = 84;
+const INLAY_CELLS = 29, INLAY_ORIGIN = 27;          // canonical inlay (inner coords)
+const INLAY_NSLOTS = 24;
+const INLAY_FRAME_BITS = 40 + INLAY_NSLOTS * 256;   // 6,184
+/* Length-generic variant of unpackFrame: slot count derives from bit count
+   (2704 -> 10 slots for SV-0001, 6184 -> 24 for SV-0005). */
+function unpackFrameAuto(bits){
+  const read = (off, n) => { let v=0; for(let i=0;i<n;i++) v=(v<<1)|bits[off+i]; return v>>>0; };
+  const seed = read(0,16), ctype = read(16,8), K = read(24,16);
+  const nslots = (bits.length - 40) >> 8;
+  const symbols = [];
+  for (let slot=0; slot<nslots; slot++){
+    const base = 40 + slot*256, sym = new Uint8Array(32);
+    for (let b=0;b<32;b++) sym[b] = read(base + b*8, 8);
+    symbols.push(sym);
+  }
+  return {seed, ctype, K, symbols};
+}
+
 return { sha256, hmacSha256, crc32,
   P, Nn, G, ptAdd, ptMul, invMod, pubkeyFromPriv, parsePubkey, compressPubkey,
   ecdsaVerify, ecdsaSign, rfc6979K,
@@ -378,6 +398,8 @@ return { sha256, hmacSha256, crc32,
   buildEnvelopeFields, envelopeDigest, parseEnvelope,
   buildStream, parseStream,
   randStream, solitonCDF, sampleDegree, pickIndices, encodeSymbol, LTDecoder,
-  FRAME_BITS, GRID, INNER, OFFSET, packFrame, unpackFrame };
+  FRAME_BITS, GRID, INNER, OFFSET, packFrame, unpackFrame,
+  INLAY_GRID, INLAY_INNER, INLAY_CELLS, INLAY_ORIGIN, INLAY_NSLOTS,
+  INLAY_FRAME_BITS, unpackFrameAuto };
 })();
 if (typeof module !== "undefined") module.exports = SVC;

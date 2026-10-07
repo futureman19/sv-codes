@@ -22,6 +22,12 @@ every remaining cell. One physical artifact, two independent machine layers:
 The QR is a *Trojan horse*: it recruits the scanner. Only Layer 2 is
 authenticated (§8).
 
+**Product positioning (normative):** the inlay edition is the human-facing
+onboarding artifact — stickers, handouts, any person-with-a-phone context.
+It does NOT replace SV-0001: the 64×64 matrix remains the machine-native
+format for machine-to-machine and all existing uses. Encoders MUST choose
+the edition by audience, and SV-0001 tooling is unaffected by this spec.
+
 ## 2. Grid Geometry
 
 - Grid: **96 × 96 cells**. Quiet border: 6 cells. Inner matrix: **84 × 84**
@@ -84,8 +90,12 @@ in SV-0001; degree/index reconstruction is deterministic from `(seed, slot)`.
 
 1. Locate the four hue anchors (SV-0001 §6.1, unchanged — the finder is
    grid-agnostic).
-2. Grid size: infer cell pitch from the 4×4 anchor block size, or warp and
-   try {64, 96}. Warp to the canonical 96-grid image.
+2. Grid size: sample the frame under BOTH candidate grids ({64, 96}) and
+   select by bipolar confidence — the true grid lands each sample inside one
+   printed cell (cell means near the rails), the wrong grid straddles cells
+   (mid-gray means). Reject when contrast is < 40 or the best confidence is
+   low. Anchor-pitch inference MAY shortcut this, but MUST NOT be the sole
+   selector (anchor shape art, e.g. circular gems, defeats area estimates).
 3. Per-cell value = mean of the central 50% block of each usable cell.
 4. **Threshold = midpoint of the per-cell mean extremes (NORMATIVE).** Otsu
    on near-bimodal fields collapses onto the black rail (every dark cell

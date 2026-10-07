@@ -46,14 +46,16 @@ function boot(){
   });
 
   const VOTE_WINDOW = 9;                 // frames of per-cell majority vote
-  let votes = [];                        // ring buffer of 2,704-bit frames
+  let votes = [];                        // ring buffer of bit frames (2,704 or 6,184 bits)
   let anchorMisses = 0, solved = false;
 
   function votedBits(){
-    const n = votes.length, out = new Array(2704).fill(0);
-    for (let i = 0; i < 2704; i++){
+    const len = votes[votes.length - 1].length;      // latest frame's format wins
+    const recent = votes.filter(v => v.length === len);
+    const n = recent.length, out = new Array(len).fill(0);
+    for (let i = 0; i < len; i++){
       let s = 0;
-      for (let k = 0; k < n; k++) s += votes[k][i];
+      for (let k = 0; k < n; k++) s += recent[k][i];
       out[i] = s * 2 > n ? 1 : 0;
     }
     return out;
