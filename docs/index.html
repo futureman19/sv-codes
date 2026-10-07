@@ -162,22 +162,18 @@
   }
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
+<link rel="stylesheet" href="/site-navigation.css">
 </head>
 <body>
 
-<nav>
-  <div class="wrap">
-    <a class="logo" href="#top" aria-label="SV Codes home">
-      <svg width="22" height="22" viewBox="0 0 8 8"><rect width="8" height="8" fill="white"/><rect width="2" height="2" fill="#00ffff"/><rect x="6" width="2" height="2" fill="#ff00ff"/><rect y="6" width="2" height="2" fill="#ffff00"/><rect x="6" y="6" width="2" height="2" fill="#ff0000"/><rect x="3" y="3" width="1" height="1" fill="black"/><rect x="4" y="2" width="1" height="1" fill="black"/><rect x="2" y="5" width="1" height="1" fill="black"/></svg>
-      SV·CODES
-    </a>
-    <div class="links">
-      <a href="#demo">Broadcast</a>
-      <a href="#scan">Scan</a>
-      <a href="ble/">BLE</a>
-      <a href="verify/">Verify</a>
-      <a href="#specs">Specs</a>
-      <a href="https://github.com/futureman19/sv-codes">GitHub</a>
+<nav class="svc-site-nav" aria-label="Primary">
+  <div class="svc-site-nav__inner">
+    <a class="svc-site-nav__brand" href="/" aria-label="SV Codes home"><svg width="22" height="22" viewBox="0 0 8 8"><rect width="8" height="8" fill="white"/><rect width="2" height="2" fill="#00ffff"/><rect x="6" width="2" height="2" fill="#ff00ff"/><rect y="6" width="2" height="2" fill="#ffff00"/><rect x="6" y="6" width="2" height="2" fill="#ff0000"/><rect x="3" y="3" width="1" height="1" fill="black"/><rect x="4" y="2" width="1" height="1" fill="black"/><rect x="2" y="5" width="1" height="1" fill="black"/></svg><span>SV·CODES</span></a>
+    <div class="svc-site-nav__links">
+      <a href="/" aria-current="page">Home</a>
+      <a href="/#scan">Scan</a>
+      <a href="/nft/">NFT</a>
+      <a href="/experimental/">Experimental</a>
     </div>
   </div>
 </nav>
@@ -255,6 +251,7 @@ This text is wrapped in a signed BMP envelope, framed with CRC32, and fountain-s
   </div>
 </section>
 
+<span id="broadcast" aria-hidden="true"></span>
 <section id="scan">
   <div class="wrap">
     <div class="sec-title">LIVE DEMO — RECEIVER</div>
@@ -374,7 +371,7 @@ This text is wrapped in a signed BMP envelope, framed with CRC32, and fountain-s
 <footer>
   <div class="wrap">
     <div>SV·CODES — a transport of the Bitcoin Machine Protocol.<br>Built on Bitcoin SV. Specs Stable; golden test vectors in <a href="https://github.com/futureman19/sv-codes/tree/main/poc/vectors">poc/vectors</a>.</div>
-    <div><a href="https://github.com/futureman19/sv-codes">github.com/futureman19/sv-codes</a></div>
+    <div><a href="/#specs">Specs</a> · <a href="https://github.com/futureman19/sv-codes">github.com/futureman19/sv-codes</a></div>
   </div>
 </footer>
 

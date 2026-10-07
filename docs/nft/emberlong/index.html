@@ -34,18 +34,21 @@
   .cols .card p { font-size: 14px; color: var(--dim); }
   footer { border-top: 1px solid #1a2033; padding: 24px; color: var(--dim); font-size: 13px; text-align: center; }
 </style>
+<link rel="stylesheet" href="/site-navigation.css">
 </head>
-<body>
-<nav>
-  <a class="brand" href="/">SV CODES</a>
-  <a href="/#broadcast">Broadcast</a>
-  <a href="/verify/">Verify</a>
-  <a href="/nft/">#12</a>
-  <a href="/nft/facade/">#13</a>
-  <a href="/nft/rooftop/">#14</a>
-  <a href="/nft/bonsai/">#15</a>
-  <a href="https://github.com/futureman19/sv-codes">GitHub</a>
+<body class="svc-art-page">
+<nav class="svc-site-nav" aria-label="Primary">
+  <div class="svc-site-nav__inner">
+    <a class="svc-site-nav__brand" href="/" aria-label="SV Codes home"><svg width="22" height="22" viewBox="0 0 8 8"><rect width="8" height="8" fill="white"/><rect width="2" height="2" fill="#00ffff"/><rect x="6" width="2" height="2" fill="#ff00ff"/><rect y="6" width="2" height="2" fill="#ffff00"/><rect x="6" y="6" width="2" height="2" fill="#ff0000"/><rect x="3" y="3" width="1" height="1" fill="black"/><rect x="4" y="2" width="1" height="1" fill="black"/><rect x="2" y="5" width="1" height="1" fill="black"/></svg><span>SV·CODES</span></a>
+    <div class="svc-site-nav__links">
+      <a href="/">Home</a>
+      <a href="/#scan">Scan</a>
+      <a href="/nft/" aria-current="page">NFT</a>
+      <a href="/experimental/">Experimental</a>
+    </div>
+  </div>
 </nav>
+<div class="svc-breadcrumbs" role="navigation" aria-label="Breadcrumb"><a href="/nft/">NFT</a><span aria-hidden="true"> / </span><span aria-current="page">Emberlong</span></div>
 <main>
   <div class="tag">SEALED IN-GAME ITEM · GRYDBOUND ARMORY · PROOF OF CONCEPT</div>
   <h1>The item render is its own certificate. The screenshot is the receipt.</h1>
@@ -73,7 +76,7 @@
   "mint": "a91f3c2e",
   "art": "e64fc8981b2e5437"
 }</pre>
-    <p class="sub" style="margin-top:10px">Signed by the armory key (demo): action <code>0x17E9</code> (GAME ITEM) · target <code>GRYD</code>. Scan either card with the <a href="/#broadcast">scanner</a>.</p>
+    <p class="sub" style="margin-top:10px">Signed by the armory key (demo): action <code>0x17E9</code> (GAME ITEM) · target <code>GRYD</code>. Scan either card with the <a href="/#scan">scanner</a>.</p>
   </section>
 
   <section>
@@ -112,6 +115,6 @@ target GRYD · stats ✓ · art hash ✓
     <p class="sub" style="margin:0">Four iterations of blade anatomy later: the rune panel decodes perfectly and still <em>reads as a code</em> to a trained eye — 2,704 binary cells plus four pure-hue corner anchors will always pattern-match as machine-made. That is exactly why the corner signature is the standard: <b>the seal doesn't blend, it signs.</b> Legendary-tier weavings stay for collectors who <em>want</em> the code visible as the feature. Building this mock also flushed out two real site-scanner bugs — a saturation gate 4× too weak (warm artwork polluted the yellow anchor channel and shifted the homography) and an area floor that missed 128px seals. Both fixed, all suites green, fixes live on svcode.org.</p>
   </section>
 </main>
-<footer>SV Codes × Grydbound — sealed item concept · generator: <a href="https://github.com/futureman19/sv-codes/blob/main/poc/make_gryd_emberlong.py">source</a> · series: <a href="/nft/">#12</a> · <a href="/nft/facade/">#13</a> · <a href="/nft/rooftop/">#14</a> · <a href="/nft/bonsai/">#15</a></footer>
+<footer>SV Codes × Grydbound — sealed item concept · generator: <a href="https://github.com/futureman19/sv-codes/blob/main/poc/make_gryd_emberlong.py">source</a> · series: <a href="/nft/#alley">#12</a> · <a href="/nft/facade/">#13</a> · <a href="/nft/rooftop/">#14</a> · <a href="/nft/bonsai/">#15</a></footer>
 </body>
 </html>

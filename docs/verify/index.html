@@ -65,20 +65,21 @@
   .err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.4);color:var(--red);
     border-radius:6px;padding:14px 18px;margin:16px 0;font-size:14px;display:none}
 </style>
+<link rel="stylesheet" href="/site-navigation.css">
 </head>
 <body>
-<nav><div class="inner">
-  <a class="logo" href="../">
-    <svg viewBox="0 0 8 8"><rect width="8" height="8" fill="white"/><rect width="2" height="2" fill="#00ffff"/><rect x="6" width="2" height="2" fill="#ff00ff"/><rect y="6" width="2" height="2" fill="#ffff00"/><rect x="6" y="6" width="2" height="2" fill="#ff0000"/><rect x="3" y="3" width="1" height="1" fill="black"/><rect x="4" y="4" width="1" height="1" fill="black"/></svg>
-    SV CODES
-  </a>
-  <div class="links">
-    <a href="../#demo">Broadcast</a>
-    <a href="../#scan">Scan</a>
-    <a href="../ble/">BLE</a>
-    <a href="https://github.com/futureman19/sv-codes">GitHub</a>
+<nav class="svc-site-nav" aria-label="Primary">
+  <div class="svc-site-nav__inner">
+    <a class="svc-site-nav__brand" href="/" aria-label="SV Codes home"><svg width="22" height="22" viewBox="0 0 8 8"><rect width="8" height="8" fill="white"/><rect width="2" height="2" fill="#00ffff"/><rect x="6" width="2" height="2" fill="#ff00ff"/><rect y="6" width="2" height="2" fill="#ffff00"/><rect x="6" y="6" width="2" height="2" fill="#ff0000"/><rect x="3" y="3" width="1" height="1" fill="black"/><rect x="4" y="2" width="1" height="1" fill="black"/><rect x="2" y="5" width="1" height="1" fill="black"/></svg><span>SV·CODES</span></a>
+    <div class="svc-site-nav__links">
+      <a href="/">Home</a>
+      <a href="/#scan">Scan</a>
+      <a href="/nft/">NFT</a>
+      <a href="/experimental/" aria-current="page">Experimental</a>
+    </div>
   </div>
-</div></nav>
+</nav>
+<div class="svc-breadcrumbs" role="navigation" aria-label="Breadcrumb"><a href="/experimental/">Experimental</a><span aria-hidden="true"> / </span><span aria-current="page">Anchor proof</span></div>
 
 <div class="wrap">
   <section class="hero">

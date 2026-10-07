@@ -35,12 +35,24 @@
   ol{color:var(--dim);padding-left:22px} ol li{margin-bottom:8px} ol b{color:var(--text)}
   .nav{padding:18px 0;font-size:13px}
 </style>
+<link rel="stylesheet" href="/site-navigation.css">
 </head>
 <body>
+<nav class="svc-site-nav" aria-label="Primary">
+  <div class="svc-site-nav__inner">
+    <a class="svc-site-nav__brand" href="/" aria-label="SV Codes home"><svg width="22" height="22" viewBox="0 0 8 8"><rect width="8" height="8" fill="white"/><rect width="2" height="2" fill="#00ffff"/><rect x="6" width="2" height="2" fill="#ff00ff"/><rect y="6" width="2" height="2" fill="#ffff00"/><rect x="6" y="6" width="2" height="2" fill="#ff0000"/><rect x="3" y="3" width="1" height="1" fill="black"/><rect x="4" y="2" width="1" height="1" fill="black"/><rect x="2" y="5" width="1" height="1" fill="black"/></svg><span>SV·CODES</span></a>
+    <div class="svc-site-nav__links">
+      <a href="/">Home</a>
+      <a href="/#scan">Scan</a>
+      <a href="/nft/">NFT</a>
+      <a href="/experimental/" aria-current="page">Experimental</a>
+    </div>
+  </div>
+</nav>
+<div class="svc-breadcrumbs" role="navigation" aria-label="Breadcrumb"><a href="/experimental/">Experimental</a><span aria-hidden="true"> / </span><span aria-current="page">Bluetooth receiver</span></div>
 
 <section>
   <div class="wrap">
-    <div class="nav"><a href="../">← SV·CODES</a></div>
     <div class="kick">BMP-0001 · BMP-BLE · LIVE RECEIVER</div>
     <h1>Listen for Bitcoin commands in the air.</h1>
     <p>A BMP-BLE transmitter broadcasts signed commands as ordinary Bluetooth advertisements — <b>no pairing, no connection, no account</b>. This page is a receiver: it scans the air, reassembles the fragments, checks integrity, and verifies the cryptographic signature. Everything happens on your device.</p>

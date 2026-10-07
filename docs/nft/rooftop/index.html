@@ -41,19 +41,21 @@
   td b { color: var(--ink); }
   footer { border-top: 1px solid #1a2033; padding: 24px; color: var(--dim); font-size: 13px; text-align: center; }
 </style>
+<link rel="stylesheet" href="/site-navigation.css">
 </head>
-<body>
-<nav>
-  <a class="brand" href="/">SV CODES</a>
-  <a href="/#broadcast">Broadcast</a>
-  <a href="/verify/">Verify</a>
-  <a href="/nft/">#12</a>
-  <a href="/nft/facade/">#13</a>
-  <a href="/nft/bonsai/">#15</a>
-  <a href="/nft/emberlong/">⚔</a>
-  <a href="/nft/genesis/">GENESIS</a>
-  <a href="https://github.com/futureman19/sv-codes">GitHub</a>
+<body class="svc-art-page">
+<nav class="svc-site-nav" aria-label="Primary">
+  <div class="svc-site-nav__inner">
+    <a class="svc-site-nav__brand" href="/" aria-label="SV Codes home"><svg width="22" height="22" viewBox="0 0 8 8"><rect width="8" height="8" fill="white"/><rect width="2" height="2" fill="#00ffff"/><rect x="6" width="2" height="2" fill="#ff00ff"/><rect y="6" width="2" height="2" fill="#ffff00"/><rect x="6" y="6" width="2" height="2" fill="#ff0000"/><rect x="3" y="3" width="1" height="1" fill="black"/><rect x="4" y="2" width="1" height="1" fill="black"/><rect x="2" y="5" width="1" height="1" fill="black"/></svg><span>SV·CODES</span></a>
+    <div class="svc-site-nav__links">
+      <a href="/">Home</a>
+      <a href="/#scan">Scan</a>
+      <a href="/nft/" aria-current="page">NFT</a>
+      <a href="/experimental/">Experimental</a>
+    </div>
+  </div>
 </nav>
+<div class="svc-breadcrumbs" role="navigation" aria-label="Breadcrumb"><a href="/nft/">NFT</a><span aria-hidden="true"> / </span><span aria-current="page">Rooftop #14</span></div>
 <main>
   <div class="tag">SEALED ARTWORK · PROOF OF CONCEPT · NIGHT DISTRICTS · DIEGETIC TIER III</div>
   <h1>The seal shrinks to a signature. The art takes the canvas back.</h1>
@@ -82,7 +84,7 @@
   "rarity_rank": 2,
   "art": "837766ef1d8d532e"
 }</pre>
-    <p class="sub" style="margin-top:10px">Signed by the studio key (demo): <code>038e2cb0…6538</code> · action <code>0xA47C</code> · target <code>NFT1</code>. Zoom into the corner and scan it with the <a href="/#broadcast">scanner</a>.</p>
+    <p class="sub" style="margin-top:10px">Signed by the studio key (demo): <code>038e2cb0…6538</code> · action <code>0xA47C</code> · target <code>NFT1</code>. Zoom into the corner and scan it with the <a href="/#scan">scanner</a>.</p>
   </section>
 
   <section>
@@ -125,13 +127,13 @@ target NFT1 · traits ✓ · art hash ✓</pre>
     <div class="tag">THE SERIES SO FAR</div>
     <h2>One certificate, three hiding depths</h2>
     <div class="cols">
-      <div class="card"><h3>#12 Alley — billboard</h3><p>The seal as the scene's centerpiece neon sign. Loud by design: the hanko philosophy, unmissable. <a href="/nft/">View →</a></p></div>
+      <div class="card"><h3>#12 Alley — billboard</h3><p>The seal as the scene's centerpiece neon sign. Loud by design: the hanko philosophy, unmissable. <a href="/nft/#alley">View →</a></p></div>
       <div class="card"><h3>#13 Facade — texture</h3><p>The seal as a skyscraper's lit windows, palette-shifted amber-on-navy. Casual viewers see a building; sharp eyes see a grid. <a href="/nft/facade/">View →</a></p></div>
       <div class="card"><h3>#14 Rooftop — signature</h3><p>The seal as a corner stamp, 6% of the canvas. The art is just art; the signature is the certificate. Plus shard 2 of 3 hidden in the bits.</p></div>
     </div>
     <p class="sub" style="margin-top:14px">The shard trail: <code>#13 facade</code> carried shard 1 — <em>"the other two signs hang elsewhere in the district"</em>. This piece carries shard 2 — <em>"one sign remains: it blooms, it does not hang"</em>. The third piece completes the set: <a href="/nft/bonsai/">#15 Bonsai →</a></p>
   </section>
 </main>
-<footer>SV Codes — sealed artwork concept · generator: <a href="https://github.com/futureman19/sv-codes/blob/main/poc/make_nft_night_rooftop.py">source</a> · series: <a href="/nft/">#12</a> · <a href="/nft/facade/">#13</a></footer>
+<footer>SV Codes — sealed artwork concept · generator: <a href="https://github.com/futureman19/sv-codes/blob/main/poc/make_nft_night_rooftop.py">source</a> · series: <a href="/nft/#alley">#12</a> · <a href="/nft/facade/">#13</a></footer>
 </body>
 </html>

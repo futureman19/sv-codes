@@ -40,17 +40,21 @@
   th { color: var(--dim); font-weight: 500; font-size: 12px; letter-spacing: 1px; }
   footer { border-top: 1px solid #1a2033; padding: 24px; color: var(--dim); font-size: 13px; text-align: center; }
 </style>
+<link rel="stylesheet" href="/site-navigation.css">
 </head>
-<body>
-<nav>
-  <a class="brand" href="/">SV CODES</a>
-  <a href="/#broadcast">Broadcast</a>
-  <a href="/verify/">Verify</a>
-  <a href="/nft/">#12</a>
-  <a href="/nft/facade/">#13</a>
-  <a href="/nft/rooftop/">#14</a>
-  <a href="https://github.com/futureman19/sv-codes">GitHub</a>
+<body class="svc-art-page">
+<nav class="svc-site-nav" aria-label="Primary">
+  <div class="svc-site-nav__inner">
+    <a class="svc-site-nav__brand" href="/" aria-label="SV Codes home"><svg width="22" height="22" viewBox="0 0 8 8"><rect width="8" height="8" fill="white"/><rect width="2" height="2" fill="#00ffff"/><rect x="6" width="2" height="2" fill="#ff00ff"/><rect y="6" width="2" height="2" fill="#ffff00"/><rect x="6" y="6" width="2" height="2" fill="#ff0000"/><rect x="3" y="3" width="1" height="1" fill="black"/><rect x="4" y="2" width="1" height="1" fill="black"/><rect x="2" y="5" width="1" height="1" fill="black"/></svg><span>SV·CODES</span></a>
+    <div class="svc-site-nav__links">
+      <a href="/">Home</a>
+      <a href="/#scan">Scan</a>
+      <a href="/nft/" aria-current="page">NFT</a>
+      <a href="/experimental/">Experimental</a>
+    </div>
+  </div>
 </nav>
+<div class="svc-breadcrumbs" role="navigation" aria-label="Breadcrumb"><a href="/nft/">NFT</a><span aria-hidden="true"> / </span><span aria-current="page">Bonsai #15</span></div>
 <main>
   <div class="tag">SEALED ARTWORK · NIGHT DISTRICTS · FINAL PROOF · THE CODE BLOOMS</div>
   <h1>Squint: a bonsai. Scan: a certificate.</h1>
@@ -79,7 +83,7 @@
   "rarity_rank": 1,
   "art": "d33953b240d47499"
 }</pre>
-    <p class="sub" style="margin-top:10px">Signed by the studio key (demo): <code>038e2cb0…6538</code> · action <code>0xA47C</code> · target <code>NFT1</code>. Scan the scroll with the <a href="/#broadcast">scanner</a>.</p>
+    <p class="sub" style="margin-top:10px">Signed by the studio key (demo): <code>038e2cb0…6538</code> · action <code>0xA47C</code> · target <code>NFT1</code>. Scan the scroll with the <a href="/#scan">scanner</a>.</p>
   </section>
 
   <section>
@@ -122,7 +126,7 @@ target NFT1 · traits ✓ · art hash ✓</pre>
       <div class="card"><h3>Shard 2 — #14 Rooftop</h3><p><code>"one sign remains — it blooms, it does not hang"</code> <a href="/nft/rooftop/">View →</a></p></div>
       <div class="card"><h3>Shard 3 — this piece</h3><p><code>"three shards, one root — the district is complete"</code>. Extract all three LSB shards from the PNG originals and the trail resolves.</p></div>
     </div>
-    <p class="sub" style="margin-top:14px">The series: <a href="/nft/">#12 Alley</a> (billboard) · <a href="/nft/facade/">#13 Facade</a> (texture) · <a href="/nft/rooftop/">#14 Rooftop</a> (signature) · #15 Bonsai (the code as the painting). Four depths of the same idea: the certificate lives in the artwork itself.</p>
+    <p class="sub" style="margin-top:14px">The series: <a href="/nft/#alley">#12 Alley</a> (billboard) · <a href="/nft/facade/">#13 Facade</a> (texture) · <a href="/nft/rooftop/">#14 Rooftop</a> (signature) · #15 Bonsai (the code as the painting). Four depths of the same idea: the certificate lives in the artwork itself.</p>
   </section>
 </main>
 <footer>SV Codes — sealed artwork concept · generator: <a href="https://github.com/futureman19/sv-codes/blob/main/poc/make_nft_night_bonsai.py">source</a></footer>
