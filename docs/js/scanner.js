@@ -29,6 +29,10 @@ function boot(){
   registerIssuer("031f179f4318ee0402cf66ff1f5d6eb07a8b341458b6e8c02c140a0f98cf810f0c", "Grydbound Armory (demo)");
   const scanner = new D.StreamScanner(Object.keys(ISSUERS));
   let running = false, lastReport = "";
+  // In-app browsers (Telegram/FB/IG webviews) silently block getUserMedia.
+  // Detect and pre-warn so the user knows the fix instead of a dead button.
+  const IN_APP = /Telegram|FBAN|FBAV|Instagram|Line\/|WhatsApp|Snapchat|TikTok|MicroMessenger/i.test(navigator.userAgent || "");
+  if (IN_APP) statusEl.textContent = "heads-up: this in-app browser usually blocks the camera — if Start fails, open this page in your real browser (⋮ menu → Open in browser), or use Decode a screenshot.";
 
   btn.addEventListener("click", async () => {
     try {
@@ -41,7 +45,9 @@ function boot(){
       statusEl.textContent = "scanning… point the camera at an SV Code grid";
       loop();
     } catch (e) {
-      statusEl.textContent = "camera unavailable: " + e.message;
+      statusEl.textContent = IN_APP
+        ? "camera blocked by this in-app browser — open the page in Chrome/Safari (⋮ menu → Open in browser), or use Decode a screenshot."
+        : "camera unavailable: " + e.message;
     }
   });
 
