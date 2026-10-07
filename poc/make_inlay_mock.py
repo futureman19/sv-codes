@@ -36,7 +36,7 @@ SEED = 1  # fountain mode (NOT static identity): every slot carries real encoded
           # data -> the matrix fills uniformly around the QR, and any ~K of the
           # slots suffice to decode (the grid survives heavy occlusion).
 CONTENT_ENVELOPE = 0x01
-QR_PAYLOAD = "HTTPS://SVCODE.ORG"
+QR_PAYLOAD = "HTTPS://SVCODE.ORG/I"
 QR_BORDER = 2          # modules of QR quiet zone (spec says 4; 2 scans reliably — halves the white ring)
 QR_SCALE = 1           # SV cells per QR module: 1 = QR woven into the matrix pitch (~30% width), 2 = dominant QR (~60%)
 

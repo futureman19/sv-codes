@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>The QR was the invitation — SV Codes</title>
+<meta name="description" content="Your camera read the QR in the center. The dense grid around it is a signed SV Code — and this page can prove it to you, right here, with no server.">
+<style>
+  :root{
+    --bg:#0a0c0e; --surface:#10141a; --surface2:#151b22; --border:#212a34;
+    --text:#d8e0e8; --dim:#8494a3; --cyan:#22d3ee; --green:#34d399; --yellow:#facc15; --red:#ef4444;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:520px;margin:0 auto;padding:0 20px}
+  section{padding:40px 0;border-bottom:1px solid var(--border)}
+  .kick{color:var(--cyan);font-size:11px;letter-spacing:.22em;margin-bottom:14px}
+  h1{font-size:26px;line-height:1.25;margin-bottom:16px;font-weight:600}
+  h2{font-size:19px;margin-bottom:16px;font-weight:600}
+  p{color:var(--dim);margin-bottom:12px}
+  p b{color:var(--text)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;margin:16px 0}
+  .btn{
+    display:block;width:100%;font-family:inherit;font-size:15px;font-weight:600;letter-spacing:.04em;
+    padding:15px 20px;border-radius:8px;border:1px solid var(--cyan);background:var(--cyan);
+    color:#06272c;cursor:pointer;text-align:center;text-decoration:none;
+  }
+  .btn.ghost{background:transparent;color:var(--cyan)}
+  .btn:hover{filter:brightness(1.1)}
+  .mono-box{
+    background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;
+    font-size:12px;word-break:break-all;color:var(--text);margin:10px 0;
+  }
+  .ok{color:var(--green)}
+  .hidden{display:none!important}
+  canvas{image-rendering:pixelated;max-width:100%;border-radius:6px;display:block;margin:0 auto}
+  #camVideo{display:none}
+  #camCanvas{background:#000}
+  .story{display:grid;gap:14px}
+  .story .card h3{font-size:14px;margin-bottom:6px;color:var(--cyan);font-weight:600}
+  a{color:var(--cyan)}
+  .tiny{font-size:11px;color:var(--dim);margin-top:8px}
+  .sig{padding:2px 8px;border-radius:3px;font-size:11px;letter-spacing:.08em}
+  .sig.okb{border:1px solid var(--green);color:var(--green)}
+  .footer{padding:30px 0 60px;text-align:center}
+  .demo-img{width:100%;border-radius:6px;image-rendering:pixelated}
+</style>
+<link rel="stylesheet" href="/site-navigation.css">
+</head>
+<body>
+<nav class="svc-site-nav" aria-label="Primary">
+  <div class="svc-site-nav__inner">
+    <a class="svc-site-nav__brand" href="/" aria-label="SV Codes home"><svg width="22" height="22" viewBox="0 0 8 8"><rect width="8" height="8" fill="white"/><rect width="2" height="2" fill="#00ffff"/><rect x="6" width="2" height="2" fill="#ff00ff"/><rect y="6" width="2" height="2" fill="#ffff00"/><rect x="6" y="6" width="2" height="2" fill="#ff0000"/><rect x="3" y="3" width="1" height="1" fill="black"/><rect x="4" y="2" width="1" height="1" fill="black"/><rect x="2" y="5" width="1" height="1" fill="black"/></svg><span>SV·CODES</span></a>
+    <div class="svc-site-nav__links">
+      <a href="/">Home</a>
+      <a href="/#scan">Scan</a>
+      <a href="/nft/">NFT</a>
+      <a href="/experimental/">Experimental</a>
+    </div>
+  </div>
+</nav>
+
+<section>
+  <div class="wrap">
+    <div class="kick">SV·CODES — ONE STICKER, TWO LANGUAGES</div>
+    <h1>The QR was the invitation. The grid is the message.</h1>
+    <p>Your camera read the QR in the center — every phone can, no app needed.
+    But look closer: that QR sits <b>inside</b> a second code. The dense grid
+    around it is an <b>SV Code</b> — a cryptographically signed message that
+    machines read. Same sticker. Two layers.</p>
+    <p>QR was built for humans in 1994. SV Codes are built for machines — and
+    for anyone who wants proof instead of promises.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kick">PROOF, RIGHT HERE</div>
+    <h2>Watch this page read the hidden layer.</h2>
+    <p>This is a real SV-0005 inlay code. Its QR points back to this page —
+    and the grid around it carries a signed message. No server involved:
+    <b>your phone is about to verify it by itself</b>.</p>
+    <div class="card" style="text-align:center">
+      <img class="demo-img" id="demoImg" src="../assets/inlay-demo.png" alt="SV-0005 inlay code: QR in the center of a signed matrix">
+      <canvas id="demoCanvas" class="hidden" width="1152" height="1152"></canvas>
+      <div id="demoResult" class="mono-box hidden" style="text-align:left;margin-top:14px"></div>
+      <p class="tiny" id="demoStatus">reading the grid…</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kick">NOW THE PHYSICAL ONE</div>
+    <h2>Point your camera at the sticker's grid.</h2>
+    <p>The same decoder runs below — live, on your phone, offline once loaded.
+    Center the <b>whole square</b> (colored corners included) and hold steady.</p>
+    <div class="card" style="text-align:center">
+      <video id="camVideo" playsinline muted></video>
+      <canvas id="camCanvas"></canvas>
+      <div style="margin-top:14px"><button class="btn ghost" id="camStart">Start camera</button></div>
+      <span class="tiny" id="scanStatus">camera off — everything runs locally on this page</span>
+      <div id="scanResult" class="mono-box hidden" style="text-align:left;margin-top:12px"></div>
+    </div>
+    <p class="tiny">No camera permission? Take a photo of the grid, then use
+    <a href="/#scan">Decode a screenshot</a> on the main page.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kick">WHAT JUST HAPPENED</div>
+    <div class="story">
+      <div class="card">
+        <h3>① The QR recruited you</h3>
+        <p>Any camera on any phone reads a QR code. That's the whole trick —
+        the QR is a bridge that brings you here, where the tools live. No app
+        store, no account, no friction.</p>
+      </div>
+      <div class="card">
+        <h3>② The grid proves itself</h3>
+        <p>The signed layer around the QR can say anything — a message, a
+        certificate, a Bitcoin transaction — and <b>anyone can verify it
+        offline</b>. When this page said SIGNATURE VALID, that was math on
+        your phone, not a server vouching.</p>
+      </div>
+      <div class="card">
+        <h3>③ Machines read it too</h3>
+        <p>Robots, cameras, and devices read the same grid at any angle, in
+        glare, off a screen — that's what SV Codes are for. The QR gets
+        humans in the door; the grid is the machine protocol.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="border-bottom:none">
+  <div class="wrap">
+    <div class="kick">YOUR TURN</div>
+    <h2>Decide your own SV Code.</h2>
+    <p>Type a message, watch it become a signed grid, print it, stick it
+    somewhere. The encoder is the same tool that made this sticker.</p>
+    <a class="btn" href="/">Make my SV Code</a>
+    <p class="tiny">Tip: add this page to your home screen — it doubles as an
+    SV Code reader for the next sticker you find.</p>
+  </div>
+</section>
+
+<div class="footer">
+  <div class="wrap tiny">
+    <a href="../">SV·CODES</a> — machine-native visual transaction streaming on Bitcoin SV
+  </div>
+</div>
+
+<script src="../js/svc.js"></script>
+<script src="../js/encoder.js"></script>
+<script src="../js/decoder.js"></script>
+<script src="../js/scanner.js"></script>
+<script>
+"use strict";
+/* Decode the demo inlay image through the real SV-0005 pipeline. */
+(function(){
+  const statusEl = document.getElementById("demoStatus");
+  const resultEl = document.getElementById("demoResult");
+  const img = document.getElementById("demoImg");
+  function run(){
+    try {
+      const c = document.getElementById("demoCanvas");
+      c.width = img.naturalWidth; c.height = img.naturalHeight;
+      const ctx = c.getContext("2d", { willReadFrequently: true });
+      ctx.drawImage(img, 0, 0);
+      const d = ctx.getImageData(0, 0, c.width, c.height);
+      const bits = SVDec.decodeImageData(d.data, d.width, d.height);
+      if (!bits) { statusEl.textContent = "could not read the grid — try the camera below"; return; }
+      const sc = new SVDec.StreamScanner(SVEnc.GOLDEN_PUB_HEX);
+      const r = sc.feedBits(bits);
+      if (!r) { statusEl.textContent = "assembling stream…"; return; }
+      const txt = new TextDecoder().decode(r.env.payload);
+      resultEl.classList.remove("hidden");
+      resultEl.innerHTML =
+        '<span class="sig ' + (r.sig === "valid" ? "okb" : "") + '">' +
+        (r.sig === "valid" ? "SIGNATURE VALID ✓" : r.sig.toUpperCase()) + "</span><br><br>" +
+        "format: SV-0005 inlay (" + bits.length.toLocaleString() + " bits around the QR)<br>" +
+        "payload: " + txt.replace(/</g, "&lt;");
+      statusEl.textContent = "decoded + verified — your phone just did what a robot does.";
+      statusEl.className = "tiny ok";
+    } catch (e) {
+      statusEl.textContent = "decoder error: " + e.message;
+    }
+  }
+  if (img.complete && img.naturalWidth) run();
+  else { img.onload = run; img.onerror = () => { statusEl.textContent = "demo image failed to load"; }; }
+})();
+</script>
+</body>
+</html>

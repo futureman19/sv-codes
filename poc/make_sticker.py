@@ -122,7 +122,15 @@ def main() -> int:
                     help="landing page URL the QR points to")
     ap.add_argument("--message", default=DEFAULT_MESSAGE, help="SV grid payload (<=227 bytes)")
     ap.add_argument("--out", help="output PNG (default stickers/<id>.png)")
+    ap.add_argument("--inlay", action="store_true",
+                    help="SV-0005 merged sticker: QR inside the signed grid (human onboarding edition)")
+    ap.add_argument("--inlay-url", default="https://svcode.org/i",
+                    help="inlay QR target (must stay <=20 alphanumeric chars for the canonical inlay)")
+    ap.add_argument("--inlay-message", default=INLAY_MESSAGE, help="inlay grid payload")
     args = ap.parse_args()
+
+    if args.inlay:
+        return build_inlay_sticker(args)
 
     img = build_sticker(args.url, args.id, args.message)
     out = Path(args.out) if args.out else ROOT / "stickers" / f"{args.id}.png"
@@ -130,6 +138,84 @@ def main() -> int:
     img.save(out, dpi=(DPI, DPI))
     print(f"wrote {out} ({W}x{H}px @ {DPI}dpi = {W_IN}x{H_IN} in)")
     print(f"QR payload: {args.url}{'&' if '?' in args.url else '?'}s={args.id}")
+    return 0
+
+
+INLAY_MESSAGE = (
+    "YOU FOUND THE MESSAGE INSIDE. This grid is signed - your phone verified "
+    "it locally, no server, no internet. Make your own at svcode.org"
+)
+
+
+def build_inlay_sticker(args) -> int:
+    """SV-0005 merged artifact + a productized card. Self-verifies both layers."""
+    import cv2
+    import numpy as np
+    from svcode.inlay import (
+        decode_inlay_image, encode_inlay_frame, layout_for, render_inlay,
+    )
+    from svcode.envelope import Envelope as Env
+
+    qr_payload = args.inlay_url.strip().upper()
+    layout = layout_for(qr_payload)  # raises if the QR outgrows the canonical inlay
+    if layout.qcells > 29:
+        raise SystemExit(
+            f"QR payload too long: needs {layout.qcells - 8} modules "
+            f"(canonical inlay holds v2 = 25). Shorten --inlay-url.")
+
+    v = json.loads(VECTORS.read_text())
+    sk = key_from_hex(v["private_key_hex"])
+    env = Env(target_id=0x53564331, action=0x00FF, payload=args.inlay_message.encode())
+    env.sign(sk)
+    bits = encode_inlay_frame(env.serialize(), layout, seed=1)
+    code = render_inlay(bits, layout, scale=12).convert("RGB")  # 1152x1152
+
+    # --- gate 1: SV layer roundtrip through the real decoder
+    bgr = cv2.cvtColor(np.array(code), cv2.COLOR_RGB2BGR)
+    dec = decode_inlay_image(bgr, layout)
+    assert dec == bits[: len(dec)], "SV layer: decoded bits differ"
+    from svcode.inlay import InlayDecoder
+    content = InlayDecoder().feed_bits(dec, layout)
+    env2 = Env.parse(content)
+    assert env2.payload == args.inlay_message.encode(), "SV layer: payload mismatch"
+    print("PASS  SV layer decodes + signature verifies")
+
+    # --- gate 2: QR layer reads
+    det = cv2.QRCodeDetector()
+    ok, infos, _, _ = det.detectAndDecodeMulti(bgr)
+    if not ok or not any(infos):
+        s = det.detectAndDecode(bgr)[0]
+        infos = [s] if s else []
+    assert qr_payload in infos, f"QR layer: read {infos}"
+    print(f"PASS  QR layer reads: {qr_payload}")
+
+    # --- productized card (1800x1200)
+    CW, CH = 1800, 1200
+    card = Image.new("RGB", (CW, CH), "white")
+    d = ImageDraw.Draw(card)
+    code960 = code.resize((960, 960), Image.NEAREST)
+    card.paste(code960, (90, 120))
+    d.rectangle([74, 104, 1066, 1096], outline="#dddddd", width=2)
+    tx = 1110
+    f_head, f_sub, f_url, f_note = font(80, bold=True), font(36), font(54, bold=True), font(28)
+    d.text((tx, 200), "ONE STICKER,", font=f_head, fill="black")
+    d.text((tx, 300), "TWO LANGUAGES.", font=f_head, fill="black")
+    for i, hue in enumerate(((0, 255, 255), (255, 0, 255), (255, 255, 0), (255, 0, 0))):
+        d.rectangle([tx + i * 40, 432, tx + i * 40 + 26, 458], fill=hue)
+    d.text((tx, 500), "Your camera read the QR.", font=f_sub, fill="#222222")
+    d.text((tx, 558), "A signed message hides in the grid.", font=f_sub, fill="#222222")
+    d.text((tx, 660), "svcode.org/i", font=f_url, fill="black")
+    d.text((tx, 756), "scan the grid there - it verifies itself", font=f_note, fill="#666666")
+    bb = d.textbbox((0, 0), "This sticker carries real Bitcoin.", font=font(44, bold=True))
+    d.text(((CW - (bb[2] - bb[0])) / 2, CH - 76), "This sticker carries real Bitcoin.",
+           font=font(44, bold=True), fill="black")
+
+    out = Path(args.out) if args.out else ROOT / "stickers" / f"{args.id}-inlay.png"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    card.save(out, dpi=(DPI, DPI))
+    code_out = out.with_name(out.stem + "-bare.png")
+    code.save(code_out, dpi=(DPI, DPI))
+    print(f"wrote {out} + {code_out} (QR: {qr_payload})")
     return 0
 
 
